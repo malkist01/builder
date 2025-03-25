@@ -15,11 +15,11 @@ on:
           description: 'Kernel source branch'
           default: 'lineage-19.1'
           required: true
-      toolchain:
+      TOOLCHAIN:
           description: 'Toolchain'
           default: 'https://github.com/malkist01/malkist-toolchain'
           required: true
-      tc_branch:
+      TC_BRANCH:
           description: 'Toolchain branch'
           default: 'master'
           required: true
