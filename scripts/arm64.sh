@@ -22,7 +22,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=SM-J610F
-DEF=$(DEFCONFIG)
+DEF=${DEFCONFIG}
 export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
@@ -40,7 +40,7 @@ function push() {
 }
 # Compile plox
 function compile() {
-     make -C $(pwd) O=out $(DEF)
+     make -C $(pwd) O=out ${DEF}
      make -j64 -C $(pwd) O=out
 
      if ! [ -a "$IMAGE" ]; then
