@@ -60,7 +60,7 @@ jobs:
       - name: Compiling
         run: |
           if [ "${DEVICE}" = "samsung" ]; then
-            wget https://raw.githubusercontent.com/malkist01/kernel_build_action/main/scripts/arm64.sh
+            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/arm64.sh
             bash arm64.sh
           else
             echo "Device not supported yet"
