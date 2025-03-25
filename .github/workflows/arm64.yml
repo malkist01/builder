@@ -15,16 +15,8 @@ on:
           description: 'Kernel source branch'
           default: 'lineage-19.1'
           required: true
-      TOOLCHAIN:
-          description: 'Toolchain'
-          default: 'https://github.com/malkist01/malkist-toolchain'
-          required: true
-      TC_BRANCH:
-          description: 'Toolchain branch'
-          default: 'master'
-          required: true
       defconfig:
-          description: 'Toolchain branch'
+          description: 'Defconfig'
           default: 'teletubies_defconfig'
           required: true
       token:
