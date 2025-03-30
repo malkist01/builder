@@ -9,20 +9,20 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/android_kernel_msm8917.git'
+          default: 'https://github.com/malkist01/arm64-new.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: 'lineage-19.1'
+          default: '19.1-New'
           required: true
       token:
           description: 'Telegram bot token'
           default: '7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8'
-          required: false
+          required: true
       chat_id:
           description: 'Telegram chat id'
           default: '-1002287610863'
-          required: false
+          required: true
 
 
 env:
