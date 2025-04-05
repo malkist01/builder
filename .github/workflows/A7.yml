@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/arm64-new.git'
+          default: 'https://github.com/malkist01/A7-2016.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '19.1-New'
+          default: 'los-19.0'
           required: true
       token:
           description: 'Telegram bot token'
