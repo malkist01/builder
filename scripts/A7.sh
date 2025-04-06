@@ -18,12 +18,12 @@ else
      echo "Its beta release build"
 fi
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=lineageos_a7xelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
@@ -48,7 +48,7 @@ function compile() {
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+    cp out/arch/arm64/boot/Image.gz AnyKernel
 }
 # Zipping
 zipping() {
