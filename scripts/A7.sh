@@ -18,7 +18,7 @@ else
      echo "Its beta release build"
 fi
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
+IMAGE=$(pwd)/out/arch/arm64/boot/Image
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
@@ -36,7 +36,7 @@ function push() {
         -F chat_id="$chat_id" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung J6+</b>"
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung A7 2016</b>"
 }
 # Compile plox
 function compile() {
@@ -48,7 +48,7 @@ function compile() {
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm64/boot/Image.gz AnyKernel
+    cp out/arch/arm64/boot/Image AnyKernel
 }
 # Zipping
 zipping() {
