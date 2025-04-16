@@ -22,7 +22,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
-DEF=teletubies_defconfig
+DEF=lineageos_a7xelte_defconfig
 export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
@@ -53,7 +53,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies 🕊️-"${CODENAME}"-Arm64"${DATE}".zip ./*
+    zip -r9 Teletubies 🕊️-"${CODENAME}"-A7XELTEV2"${DATE}".zip ./*
     cd ..
 }
 compile
