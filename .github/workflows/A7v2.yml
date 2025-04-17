@@ -9,10 +9,10 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/A7-2016.git'
+          default: 'https://github.com/malkist01/a7xlte.git'
       branch:
           description: 'Kernel source branch'
-          default: 'lineage-18.1'
+          default: '18.1'
           required: true
       token:
           description: 'Telegram bot token'
