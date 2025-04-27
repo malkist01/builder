@@ -2,6 +2,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+curl -o linux-stable.sh https://raw.githubusercontent.com/android-linux-stable/script/master/linux-stable.sh && chmod +x linux-stable.sh
+./linux-stable.sh -h 
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
