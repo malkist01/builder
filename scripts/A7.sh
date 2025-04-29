@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/ChimeraKernelProject/dragontc-8.0.git -b dtc-8.0-140918 gcc-64
+git clone --depth=1 https://github.com/malkist01/arm64 -b gcc gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -23,8 +23,7 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=lineageos_a7xelte_defconfig
-export CC=clang
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
