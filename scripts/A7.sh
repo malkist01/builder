@@ -4,7 +4,7 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 git remote add linux-stable https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/
 git fetch linux-stable
-git merge v3.18.140
+git merge v3.18.120
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
