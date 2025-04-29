@@ -2,14 +2,11 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-git remote add linux-stable https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/
-git fetch linux-stable
-git merge v3.18.109
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/arm64.git -b gcc gcc-64
+git clone --depth=1 git clone --depth=1 https://github.com/malkist01/malkist-toolchain -b master gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -26,7 +23,7 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=lineageos_a7xelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
@@ -56,7 +53,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies 🕊️-"${CODENAME}"-Arm64"${DATE}".zip ./*
+    zip -r9 Teletubies-"${CODENAME}"-Arm64"${DATE}".zip ./*
     cd ..
 }
 compile
