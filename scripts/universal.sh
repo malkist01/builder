@@ -32,6 +32,8 @@ START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=nethunter_defconfig
 MAKE_ARGS="CONFIG_NO_ERROR_ON_MISMATCH=y"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=a7exlte
@@ -60,7 +62,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies a7xlte-"${CODENAME}"-Nethunter"${DATE}".zip ./*
+    zip -r9 Teletubies-"${CODENAME}"-"${DATE}".zip ./*
     cd ..
 }
 compile
