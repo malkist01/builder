@@ -3,11 +3,10 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 echo "Nuke previous toolchains"
-https://github.com/ryan-andri/aarch64-linaro-linux-gnu-4.9.git
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-
+git clone --depth=1 https://github.com/ryan-andri/aarch64-linaro-linux-gnu-4.9.git -b master gcc-64
 # Speed up the build
 CCACHE=true
 unset CLANG_ROOT
