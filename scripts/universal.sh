@@ -20,6 +20,13 @@ MAKE_ARGS=""
 # Speed up the build
 CCACHE=true
 
+unset CLANG_ROOT
+unset CLANG_PATH
+unset LD_LIBRARY_PATH
+unset CLANG_TRIPLE
+unset CC
+unset CLANG_SRC
+
 # Some devices will have mismatch, to ignore errors uncomment the following line
 MAKE_ARGS="CONFIG_NO_ERROR_ON_MISMATCH=y
 echo "Done"
