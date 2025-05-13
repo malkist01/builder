@@ -3,6 +3,7 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 echo "Nuke previous toolchains"
+https://github.com/ryan-andri/aarch64-linaro-linux-gnu-4.9.git
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
