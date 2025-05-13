@@ -6,7 +6,22 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/rokibhasansagar/linaro-toolchain-latest.git -b latest-4 gcc-64
+
+# GCC 64bit (arm64) source
+CROSS_COMPILE_SRC="https://kali.download/nethunter-images/toolchains/linaro-aarch64-4.9.tar.xz"
+CROSS_COMPILE_TYPE="wget"
+# And it's path
+CCD="${TD}/aarch64-4.9"
+export CROSS_COMPILE=${CCD}/bin/aarch64-linux-android-
+
+# Additional compiler arguments
+MAKE_ARGS=""
+
+# Speed up the build
+CCACHE=true
+
+# Some devices will have mismatch, to ignore errors uncomment the following line
+MAKE_ARGS="CONFIG_NO_ERROR_ON_MISMATCH=y
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -23,8 +38,6 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=nethunter_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
-export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=a7exlte
