@@ -1,4 +1,4 @@
-name: Universal7580
+name: NethunterKernel
 
 on:
   workflow_dispatch:
@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/A7-2016.git'
+          default: 'https://github.com/malkist01/nethunter_a7_2016.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '20.0'
+          default: '18.1'
           required: true
       token:
           description: 'Telegram bot token'
