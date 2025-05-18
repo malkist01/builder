@@ -2,12 +2,13 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSUonArm32/main/kernel/setup.sh" | bash -s main
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/arm64 -b gcc gcc-64
+git clone --depth=1 https://github.com/ryan-andri/aarch64-linaro-linux-gnu-4.9.git -b master gcc-64
+# Speed up the build
+CCACHE=true
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -24,7 +25,7 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=A7XLTE
 DEF=lineageos_a7xelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
