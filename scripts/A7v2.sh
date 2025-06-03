@@ -6,7 +6,9 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/rokibhasansagar/linaro-toolchain-latest.git -b latest-4 gcc-64
+git clone --depth=1 https://github.com/ryan-andri/aarch64-linaro-linux-gnu-4.9.git -b master gcc-64
+# Speed up the build
+CCACHE=true
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
