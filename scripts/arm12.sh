@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/arm-eabi-4.9.git -b master gcc
+git clone --depth=1 https://github.com/Akianonymus/Linaro-arm.git -b 4.9 gcc
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
