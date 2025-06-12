@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/Akianonymus/Linaro-arm.git -b 4.9 gcc
+git clone --depth=1 https://github.com/xiangfeidexiaohuo/GCC-4.9.git -b arm32 gcc
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -23,7 +23,7 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=teletubies_defconfig
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-eabi-"
+export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-androideabi-"
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
