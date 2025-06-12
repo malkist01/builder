@@ -48,7 +48,7 @@ function compile() {
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm/boot/zImage-dtb AnyKernel
+    cp out/arch/arm/boot/zImage AnyKernel
 }
 # Zipping
 zipping() {
