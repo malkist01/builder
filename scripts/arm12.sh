@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/xiangfeidexiaohuo/GCC-4.9.git -b arm32 gcc
+git clone --depth=1 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git -b lineage-19.1 gcc
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
