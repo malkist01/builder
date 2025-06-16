@@ -6,8 +6,6 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/arm-linux-androideabi-4.9-sabermod.git -b master gcc
-echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
@@ -18,12 +16,12 @@ else
      echo "Its beta release build"
 fi
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
-IMAGE=$(pwd)/out/arch/arm/boot/zImage
+IMAGE=$(pwd)/out/arch/arm/boot/zImage-dtb
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-androideabi-"
+export CROSS_COMPILE=$(pwd)/gcc/bin/arm-linux-androideabi-
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
@@ -48,7 +46,7 @@ function compile() {
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm/boot/zImage AnyKernel
+    cp out/arch/arm/boot/zImage-dtb AnyKernel
 }
 # Zipping
 zipping() {
