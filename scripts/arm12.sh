@@ -22,7 +22,7 @@ IMAGE=$(pwd)/out/arch/arm/boot/zImage
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
-DEF=teletubies_defconfig
+DEF=j6primelte_defconfig
 export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-androideabi-"
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
@@ -53,7 +53,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-A12-"${CODENAME}"-arm"${DATE}".zip ./*
+    zip -r9 Teletubies-A11-"${CODENAME}"-arm"${DATE}".zip ./*
     cd ..
 }
 compile
