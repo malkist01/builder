@@ -22,7 +22,6 @@ START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
 export CROSS_COMPILE=$(pwd)/gcc/bin/arm-linux-androideabi-
-export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
