@@ -1,4 +1,4 @@
-name: arm 12
+name: arm Medusa
 
 on:
   workflow_dispatch:
@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source link (dont include . git at the end)'
-          default: 'https://github.com/malkist01/j6plus_arm'
+          default: 'https://github.com/malkist01/android_kernel_samsung_msm8917_Q.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '19.1'
+          default: 'stable'
           required: true
       token:
           description: 'Telegram bot token'
