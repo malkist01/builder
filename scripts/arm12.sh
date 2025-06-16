@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/SaberNaro-arm-eabi-4.9 -b master gcc
+git clone --depth=1 https://github.com/malkist01/arm.git -b gcc gcc
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
