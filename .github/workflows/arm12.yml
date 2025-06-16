@@ -38,11 +38,13 @@ jobs:
 
     steps:
       - name: Initializing environment
-        run: |
-          git config --global user.name "malkist01"
-          git config --global user.email "aripujiyanto0812@gmail.com"
-          git clone https://github.com/akhilnarang/scripts x
-          cd x/setup && bash android_build_env.sh
+       run: |
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install git make bc bison \
+          openssl curl zip kmod cpio flex libelf-dev \
+          libssl-dev libtfm-dev wget device-tree-compiler \
+          ca-certificates python3 python2 binutils \
+          binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi
 
       - name: Compiling
         run: |
