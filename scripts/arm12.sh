@@ -38,8 +38,8 @@ function push() {
 }
 # Compile plox
 function compile() {
-     make -C $(pwd) O=out KCFLAGS=-mno-android ${DEF}
-     make -j64 -C $(pwd) KCFLAGS=-mno-android O=out
+     make -C $(pwd) O=out ${DEF}
+     make -j64 -C $(pwd) O=out
      if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
