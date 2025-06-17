@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Set Environment Configs
 OUT=$(pwd)/out
 DATE=$(date +"%m-%d-%y")
 BUILD_START=$(date +"%s")
