@@ -24,7 +24,6 @@ export KBUILD_BUILD_HOST=MicrosoftAzure
 export PATH=$(pwd)/proton-clang/bin:$PATH
 export CROSS_COMPILE=$(pwd)/proton-clang/bin/arm-linux-gnueabi-
 
-# Make .config
 make \
 O=$OUT \
 ARCH=$ARCH
