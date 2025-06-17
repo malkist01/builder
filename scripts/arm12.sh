@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/YumeMichi/linaro-arm-eabi-4.9.git -b master gcc
+git clone --depth=1 https://github.com/sukrut-kelkaarr/gcc-linaro-4.9-32.git -b master gcc
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
@@ -22,7 +22,7 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-eabi-"
+export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-gnueabi-"
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
