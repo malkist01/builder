@@ -6,7 +6,6 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/kdrag0n/proton-clang.git -b master gcc
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
@@ -26,8 +25,8 @@ CODENAME=j6primelte
 DEF=j6primelte_defconfig
 export USE_CCACHE=1 && export
 CCACHE_EXEC=/usr/bin/ccache && ccache -M20G
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-gnueabi-"
-export PATH="$(pwd)/gcc/bin:$PATH"
+export PATH=$(pwd)/proton-clang/bin:$PATH
+export CROSS_COMPILE=$(pwd)/proton-clang/bin/arm-linux-gnueabi-
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
