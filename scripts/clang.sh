@@ -8,9 +8,6 @@ CC=clang
 CCOMP=arm-linux-gnueabi-
 CONF=j4primelte_defconfig
 
-# Set CCcache
-export USE_CCACHE=1 && export CCACHE_EXEC=/usr/bin/ccache && ccache -M 20G
-
 # Export ARCH & SUBARCH
 export ARCH=$ARCH
 export SUBARCH=$ARCH
