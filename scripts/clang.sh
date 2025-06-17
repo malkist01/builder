@@ -1,48 +1,50 @@
 #!/usr/bin/env bash
-rm -rf kernel
-git clone $REPO -b $BRANCH kernel 
-cd kernel
-echo "Nuke previous toolchains"
-rm -rf toolchain out AnyKernel
-echo "cleaned up"
-echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/azure-clang.git -b main clang
-if [ "$is_test" = true ]; then
-     echo "Its alpha test build"
-     unset chat_id
-     unset token
-     export chat_id=${my_id}
-     export token=${nToken}
-else
-     echo "Its beta release build"
-fi
-SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
-IMAGE=$(pwd)/out/arch/arm/boot/zImage-dtb
-DATE=$(date +'%H%M-%d%m%y')
-START=$(date +"%s")
+# Set Environment Configs
+OUT=$(pwd)/out
+DATE=$(date +"%m-%d-%y")
+BUILD_START=$(date +"%s")
+ARCH=arm
 CC=clang
-HOSTCC=clang
-CODENAME=j6primelte
-DEF=j6primelte_defconfig
-export PATH=$(pwd)/clang/bin:$PATH
-export CROSS_COMPILE=$(pwd)/clang/bin/arm-linux-gnueabi-
-export ARCH=arm
-export KBUILD_BUILD_USER=malkist
-export KBUILD_BUILD_HOST=android
-# Push kernel to channel
-function push() {
-    cd AnyKernel || exit 1
-    ZIP=$(echo *.zip)
-    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
-        -F chat_id="$chat_id" \
-        -F "disable_web_page_preview=true" \
-        -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung J6+</b>"
-}
-# Compile plox
-function compile() {
-     make -C $(pwd) O=out ${DEF}
-     make -j64 -C $(pwd) O=out
+CCOMP=arm-linux-gnueabi-
+CONF=j4primelte_defconfig
+
+# Set CCcache
+export USE_CCACHE=1 && export CCACHE_EXEC=/usr/bin/ccache && ccache -M 20G
+
+# Export ARCH & SUBARCH
+export ARCH=$ARCH
+export SUBARCH=$ARCH
+
+# Set Kernel & Host Name
+# export VERSION=
+export DEFCONFIG=$CONF
+
+export LOCALVERSION=$VERSION
+
+# Export Username & Machine Name
+export KBUILD_BUILD_USER=Batu33TR
+export KBUILD_BUILD_HOST=MicrosoftAzure
+
+export PATH=$(pwd)/proton-clang/bin:$PATH
+export CROSS_COMPILE=$(pwd)/proton-clang/bin/arm-linux-gnueabi-
+
+# Make .config
+make \
+O=$OUT \
+ARCH=$ARCH
+CC=$CC \
+HOSTCC=$CC \
+CROSS_COMPILE=$CCOMP \
+$CONF
+
+# Compile Kernel
+make \
+O=$OUT \
+ARCH=$ARCH \
+CC=$CC \
+HOSTCC=$CC \
+CROSS_COMPILE=$CCOMP
+
      if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
