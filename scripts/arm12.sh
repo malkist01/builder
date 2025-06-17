@@ -7,7 +7,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/KudProject/arm-linux-androideabi-4.9.git -b master gcc
+git clone --depth=1 https://github.com/KudProject/arm-linux-androideabi-4.9.git -b master gcc32
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
@@ -23,8 +23,8 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-androideabi-"
-export PATH="$(pwd)/gcc/bin:$PATH"
+export CROSS_COMPILE="$(pwd)/gcc32/bin/arm-linux-androideabi-"
+export PATH="$(pwd)/gcc32/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
