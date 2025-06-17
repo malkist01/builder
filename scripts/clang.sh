@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/arm.git -b gcc gcc
+git clone --depth=1 https://github.com/kdrag0n/proton-clang.git -b master gcc
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
@@ -20,9 +20,13 @@ SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm/boot/zImage-dtb
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
+CC=clang
+HOSTCC=clang
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-androideabi-"
+export USE_CCACHE=1 && export
+CCACHE_EXEC=/usr/bin/ccache && ccache -M20G
+export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-gnueabi-"
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
