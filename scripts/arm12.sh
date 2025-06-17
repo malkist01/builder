@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/Akianonymus/Linaro-arm.git -b 7.2 gcc
+git clone --depth=1 https://github.com/Akianonymus/Linaro-arm.git -b 4.9 gcc
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
