@@ -17,7 +17,7 @@ else
      echo "Its beta release build"
 fi
 SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
-IMAGE=$(pwd)/out/arch/arm/boot/zImage-dtb
+IMAGE=$(pwd)/out/arch/arm/boot/zImage
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
@@ -46,7 +46,7 @@ function compile() {
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm/boot/zImage-dtb AnyKernel
+    cp out/arch/arm/boot/zImage AnyKernel
 }
 # Zipping
 zipping() {
