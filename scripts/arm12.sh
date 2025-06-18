@@ -2,6 +2,7 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+curl -LSs -https://raw.githubusercontent.com/ThRE-Team/ksu-patch/refs/heads/sc/4.9-ksu-patcher.sh | bash
 curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
