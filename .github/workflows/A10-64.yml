@@ -9,7 +9,7 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/J6primelte_eas-3.18.git'
+          default: 'https://github.com/malkist01/J6_64.git'
           required: true
       branch:
           description: 'Kernel source branch'
