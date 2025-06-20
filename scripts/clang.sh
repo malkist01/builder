@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/DragonTC.git -b 9.0 proton-clang
+git clone --depth=1 https://github.com/malkist01/clang-9.git -b master proton-clang
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
