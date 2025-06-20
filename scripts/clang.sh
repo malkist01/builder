@@ -22,7 +22,6 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/proton-clang/bin/arm-linux-gnueabi-"
 export PATH="$(pwd)/proton-clang/bin:$PATH"
 export ARCH=arm
 export KBUILD_BUILD_USER=malkist
@@ -39,13 +38,11 @@ function push() {
 }
 # Compile plox
 function compile() {
-     make -C $(pwd) O=out ${DEF}
-     make -j64 -C $(pwd) O=out
-     make -j64 -C "${PROCS}" O=out \
-        ARCH=$ARCH \
-        CC="clang" \
-        LLVM=1 \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+    make -j$(nproc --all) O=out ARCH=arm64 ${DEF}
+    make -j$(nproc --all) ARCH=arm64 O=out \
+                          CC=clang \
+                          CROSS_COMPILE=aarch64-linux-gnu- \
+                          CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
      if ! [ -a "$IMAGE" ]; then
         finderr
