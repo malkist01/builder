@@ -48,8 +48,8 @@ jobs:
       - name: Compiling
         run: |
           if [ "${DEVICE}" = "samsung" ]; then
-            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/arm64.sh
-            bash arm64.sh
+            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/eas64.sh
+            bash eas64.sh
           else
             echo "Device not supported yet"
           fi
