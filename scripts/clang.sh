@@ -23,7 +23,7 @@ START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
 export PATH="$(pwd)/proton-clang/bin:$PATH"
-export ARCH=arm
+export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
 # Push kernel to channel
