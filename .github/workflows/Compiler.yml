@@ -190,8 +190,7 @@ jobs:
             export PATH=$HOME/clang/bin:$HOME/gcc-64/bin:$HOME/gcc-32/bin:$PATH
          fi
          export KBUILD_BUILD_USER="malkist"
-         export KBUILD_BUILD_HOST="android
-"
+         export KBUILD_BUILD_HOST="android"
          if [ ${{ inputs.compiler }} == gcc ]; then
             COMMAND+=" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-"
          elif [ ${{ inputs.compiler }} == clang ] && [ ${{ inputs.aosp-clang }} == false ]; then
