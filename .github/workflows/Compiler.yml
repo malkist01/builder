@@ -50,7 +50,7 @@ on:
         type: string
       AK3:
         description: 'AnyKernel3'
-        default: 'https://github.com/osm0sis/AnyKernel3'
+        default: 'https://github.com/malkist01/anykernel.git -b master'
         required: true
         type: string
 jobs:
