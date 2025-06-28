@@ -84,6 +84,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Setup Packages
       run: |
+
          sudo apt-get install --no-install-recommends -y gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu lld llvm g++-aarch64-linux-gnu
          aria2c -q https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh && NONINTERACTIVE=1 bash ./uninstall.sh -f -q
          if [ -f /bin/swapon ]; then
@@ -188,8 +189,9 @@ jobs:
          else
             export PATH=$HOME/clang/bin:$HOME/gcc-64/bin:$HOME/gcc-32/bin:$PATH
          fi
-         export KBUILD_BUILD_USER="linex"
-         export KBUILD_BUILD_HOST="project"
+         export KBUILD_BUILD_USER="malkist"
+         export KBUILD_BUILD_HOST="android
+"
          if [ ${{ inputs.compiler }} == gcc ]; then
             COMMAND+=" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-"
          elif [ ${{ inputs.compiler }} == clang ] && [ ${{ inputs.aosp-clang }} == false ]; then
