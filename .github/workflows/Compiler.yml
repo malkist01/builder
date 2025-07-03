@@ -1,11 +1,11 @@
 # Kernel Builder Project
-name: KernelCompiler
+name: Compiler
 on:
   workflow_dispatch:
     inputs:
       ubuntu:
         description: 'Run on'
-        default: 'ubuntu-latest'
+        default: 'ubuntu-22.04'
         required: true
         type: string
       name:
@@ -21,7 +21,7 @@ on:
       aosp-clang:
         description: 'Gcc | false for disable'
         default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz'
-        required: true
+        required: false
         type: string
       kernel-url:
         description: 'Kernel-url'
@@ -54,7 +54,7 @@ on:
         required: true
         type: string
 jobs:
-  linext-24:
+  teletubies:
     runs-on: ${{ inputs.ubuntu }}
     steps:
     - name: Checkin
