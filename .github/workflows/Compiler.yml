@@ -15,22 +15,22 @@ on:
         type: string
       compiler:
         description: 'Compiler | gcc|clang|llvm'
-        default: 'clang'
+        default: 'gcc'
         required: true
         type: string
       aosp-clang:
-        description: 'Clang | false for disable'
+        description: 'Gcc | false for disable'
         default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz'
         required: true
         type: string
       kernel-url:
         description: 'Kernel-url'
-        default: 'https://github.com/linex-17/Limitless.git'
+        default: 'https://github.com/malkist01/J6_64.git'
         required: true
         type: string
       kernel-branch:
         description: 'Kernel-branch'
-        default: 'main'
+        default: '17.1-64'
         required: true
         type: string
       kernel-config:
