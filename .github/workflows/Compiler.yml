@@ -35,7 +35,7 @@ on:
         type: string
       kernel-config:
         description: 'Kernel-config'
-        default: 'xi_defconfig'
+        default: 'j6primelte_defconfig'
         required: true
         type: string
       kernelsu:
