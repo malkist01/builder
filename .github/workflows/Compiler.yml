@@ -19,8 +19,8 @@ on:
         required: true
         type: string
       aosp-clang:
-        description: 'Gcc | false for disable'
-        default: 'https://codeload.github.com/sukrut-kelkaarr/gcc-linaro-4.9/zip/refs/heads/master'
+        description: 'Gcc'
+        default: 'https://github.com/sukrut-kelkaarr/gcc-linaro-4.9.git -b master gcc-64'
         required: true
         type: string
       kernel-url:
