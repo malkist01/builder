@@ -20,7 +20,7 @@ on:
         type: string
       aosp-clang:
         description: 'Gcc | false for disable'
-        default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz'
+        default: 'https://codeload.github.com/sukrut-kelkaarr/gcc-linaro-4.9/zip/refs/heads/master'
         required: false
         type: string
       kernel-url:
