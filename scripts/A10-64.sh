@@ -24,11 +24,15 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
+CCACHE_DIR="~/.ccache"
 export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
+export USE_CCACHE=1
+export CCACHE_DIR="${CCACHE_DIR}"
+ccache -M 50G
 # Push kernel to channel
 function push() {
     cd AnyKernel || exit 1
