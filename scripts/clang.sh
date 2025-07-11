@@ -24,6 +24,7 @@ CODENAME=j6primelte
 DEF=j6primelte_defconfig
 CCACHE_DIR="~/.ccache"
 export CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-linux-android-"
+export CROSS_COMPILE="$(pwd)/gcc/bin/arm-linux-gnueabi-"
 export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
