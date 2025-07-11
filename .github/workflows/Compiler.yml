@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/J6_64.git'
+          default: 'https://github.com/malkist01/MSM8917-3.18.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '17.1-64'
+          default: '64'
           required: true
       token:
           description: 'Telegram bot token'
