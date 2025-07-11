@@ -1,168 +1,55 @@
-# Kernel Builder Project
-name: Compiler
+name: Testing
+
 on:
   workflow_dispatch:
     inputs:
-      ubuntu:
-        description: 'Run on'
-        default: 'ubuntu-22.04'
-        required: true
-        type: string
-      name:
-        description: 'Name'
-        default: 'Teletubies-kernel'
-        required: true
-        type: string
-      compiler:
-        description: 'Compiler | gcc|clang|llvm'
-        default: 'gcc'
-        required: true
-        type: string
-      aosp-clang:
-        description: 'Gcc'
-        default: 'https://github.com/sukrut-kelkaarr/gcc-linaro-4.9.git -b master gcc-64'
-        required: true
-        type: string
-      kernel-url:
-        description: 'Kernel-url'
-        default: 'https://github.com/malkist01/J6_64.git'
-        required: true
-        type: string
-      kernel-branch:
-        description: 'Kernel-branch'
-        default: '17.1-64'
-        required: true
-        type: string
-      kernel-config:
-        description: 'Kernel-config'
-        default: 'j6primelte_defconfig'
-        required: true
-        type: string
-      kernelsu:
-        description: 'KernelSU | false for disable'
-        default: 'curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.7.6'
-        required: true
-        type: string
-      disable-lto:
-        description: 'Disable LTO'
-        default: 'true'
-        required: true
-        type: string
-      AK3:
-        description: 'AnyKernel3'
-        default: 'https://github.com/malkist01/anykernel.git -b master'
-        required: true
-        type: string
+      device:
+          description: 'Device'
+          default: 'samsung'
+          required: true
+      repo:
+          description: 'Kernel source'
+          default: 'https://github.com/malkist01/J6_64.git'
+          required: true
+      branch:
+          description: 'Kernel source branch'
+          default: '17.1-64'
+          required: true
+      token:
+          description: 'Telegram bot token'
+          default: '7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8'
+          required: true
+      chat_id:
+          description: 'Telegram chat id'
+          default: '-1002287610863'
+          required: true
+
+
+env:
+  TZ: Asia/Jakarta
+  DEVICE: ${{ github.event.inputs.device }}
+  REPO: ${{ github.event.inputs.repo }}
+  BRANCH: ${{ github.event.inputs.branch }}
+  token: ${{ github.event.inputs.token }}
+  chat_id: ${{ github.event.inputs.chat_id }}
+
 jobs:
-  teletubies:
-    runs-on: ${{ inputs.ubuntu }}
+  kernel-build:
+    runs-on: ubuntu-22.04
+
     steps:
-    - name: Checkin
-      run: |
-         echo "name: ${{ inputs.name }}"
-         echo "compiler: ${{ inputs.compiler }}"
-         echo "gcc: ${{ inputs.gcc }}"
-         if [ ${{ inputs.kernel-url }} != true ]; then
-            echo "kernel-url: ${{ inputs.kernel-url }}"
-            echo "kernel-branch: ${{ inputs.kernel-branch }}"
-         fi
-         if [ ${{ inputs.kernel-url }} == true ]; then
-            echo "kernel-url: use current repo"
-            sudo timedatectl set-timezone Asia/Jakarta
-            if [ ${{ inputs.kernel-branch }} != main ]; then
-               echo "custom-sc: ${{ inputs.kernel-branch }}"
-            fi
-            if [ ${{ inputs.kernel-branch }} == main ]; then
-               echo "custom-sc: disable"
-            fi
-         fi
-         echo "kernel-config: ${{ inputs.kernel-config }}"
-         echo "kernelsu: ${{ inputs.kernelsu }}"
-         echo "disable-lto: ${{ inputs.disable-lto }}"
-         echo "linex Project"
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup Packages
-      run: |
+      - name: Initializing environment
+        run: |
+          git config --global user.name "malkist01"
+          git config --global user.email "aripujiyanto0812@gmail.com"
+          git clone https://github.com/akhilnarang/scripts x
+          cd x/setup && bash android_build_env.sh
 
-         sudo apt-get install --no-install-recommends -y gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu lld llvm g++-aarch64-linux-gnu
-         aria2c -q https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh && NONINTERACTIVE=1 bash ./uninstall.sh -f -q
-         if [ -f /bin/swapon ]; then
-             export SWAP_FILE=$(swapon --show=NAME | tail -n 1)
-             sudo swapoff $SWAP_FILE
-             sudo rm $SWAP_FILE
-             sudo fallocate -l 16G $SWAP_FILE
-             sudo chmod 600 $SWAP_FILE
-             sudo mkswap $SWAP_FILE
-             sudo swapon $SWAP_FILE
-             unset SWAP_FILE
-         fi
-
-    - name: Setup Kernel
-      run: |
-         if [ ${{ inputs.kernel-url }} != false ]; then
-            git clone --depth=1 ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }} kernel-dir
-         else
-            if [ ${{ inputs.kernel-branch }} != main ]; then
-               ${{ inputs.kernel-branch }}
-            else
-               echo "custom-sc: disable"
-            fi
-            ls
-         fi
-
-    - name: Setup KernelSU
-      run: |
-         if [ ${{ inputs.kernel-url }} != false ]; then
-            cd kernel-dir
-         fi
-         if [ ${{ inputs.kernel-url }} == false ]; then
-            if [ ${{ inputs.kernel-branch }} != main ]; then
-               ${{ inputs.kernel-branch }}
-            fi
-         fi
-         rm -rf KernelSU
-         if [ ${{ inputs.kernelsu }} == ksu ]; then
-            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.7.6
-         elif [ ${{ inputs.kernelsu }} == next ]; then
-            curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
-         elif [ ${{ inputs.kernelsu }} != false ]; then
-            ${{ inputs.kernelsu }}
-         fi
-    - name: Compile
-      run: |
-         mkdir -p -v out
-         if [ ${{ inputs.kernel-url }} != false ]; then
-            cd kernel-dir
-         export KBUILD_BUILD_USER="malkist"
-         export KBUILD_BUILD_HOST="android"
-         if [ ${{ inputs.compiler }} == gcc ]; then
-            COMMAND+=" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-"
-         ${COMMAND}
-    - name: AnyKernel3
-      run: |
-          git clone ${{ inputs.AK3 }} AnyKernel3
-          rm -rf AnyKernel3/.git AnyKernel3/.github AnyKernel3/LICENSE AnyKernel3/README.md AnyKernel3/modules AnyKernel3/patch AnyKernel3/ramdisk
-          if [[ -f out/arch/arm64/boot/Image.gz-dtb ]]; then
-            cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
-          elif [[ -f out/arch/arm64/boot/Image-dtb ]]; then
-            cp out/arch/arm64/boot/Image-dtb AnyKernel3/Image-dtb
-          elif [[ -f out/arch/arm64/boot/Image.gz ]]; then
-            cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
-          elif [[ -f out/arch/arm64/boot/Image ]]; then
-            cp out/arch/arm64/boot/Image AnyKernel3/Image
+      - name: Compiling
+        run: |
+          if [ "${DEVICE}" = "samsung" ]; then
+            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/clang.sh
+            bash clang.sh
+          else
+            echo "Device not supported yet"
           fi
-          if [ -f out/arch/arm64/boot/dtbo.img ]; then
-            cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
-          fi
-    - name: Upload
-      run: |
-          mkdir Upload
-          cp -rf AnyKernel3/* Upload
-    - id: Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: "${{ inputs.name }}"
-        path: Upload/*
-        
-# Enjoy Your Life....
