@@ -6,7 +6,6 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/rokibhasansagar/linaro-toolchain-latest.git -b latest-4 gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -24,8 +23,8 @@ START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
 CCACHE_DIR="~/.ccache"
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
-export PATH="$(pwd)/gcc-64/bin:$PATH"
+export CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-linux-android-"
+export PATH="$(pwd)/gcc/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
