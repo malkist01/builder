@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/toolchain.git -b clang proton-clang
+git clone --depth=1 https://github.com/rokibhasansagar/linaro-toolchain-latest.git -b latest-4 gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -23,10 +23,15 @@ DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
 DEF=j6primelte_defconfig
-export PATH="$(pwd)/proton-clang/bin:$PATH"
+CCACHE_DIR="~/.ccache"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
 export KBUILD_BUILD_HOST=android
+export USE_CCACHE=1
+export CCACHE_DIR="${CCACHE_DIR}"
+ccache -M 50G
 # Push kernel to channel
 function push() {
     cd AnyKernel || exit 1
@@ -39,23 +44,20 @@ function push() {
 }
 # Compile plox
 function compile() {
-    make -j$(nproc --all) O=out ARCH=arm64 ${DEF}
-    make -j$(nproc --all) ARCH=arm64 O=out \
-                          CC=clang \
-                          CROSS_COMPILE=aarch64-linux-gnu- \
-                          CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+     make -C $(pwd) O=out ${DEF}
+     make -j64 -C $(pwd) O=out
 
      if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
      fi
     git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    cp out/arch/arm/boot/Image.gz-dtb AnyKernel
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
 }
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-test-"${CODENAME}"-Arm64"${DATE}".zip ./*
+    zip -r9 Teletubies-A10-"${CODENAME}"-Arm64-"${DATE}".zip ./*
     cd ..
 }
 compile
