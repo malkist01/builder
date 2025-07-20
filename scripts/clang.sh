@@ -31,7 +31,8 @@ export CROSS_COMPILE_ARM32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
 export PATH="$(pwd)/clang/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
-export KBUILpD_BUILD_HOST=android
+export KBUILD_BUILD_HOST=android
+BUILD_ARGS:LLVM=1 LLVM_IAS=1
 export USE_CCACHE=1
 export CCACHE_DIR="${CCACHE_DIR}"
 ccache -M 50G
