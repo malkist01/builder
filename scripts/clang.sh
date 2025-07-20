@@ -36,6 +36,8 @@ BUILD_ARGS:LLVM=1 LLVM_IAS=1
 export USE_CCACHE=1
 export CCACHE_DIR="${CCACHE_DIR}"
 ccache -M 50G
+LC_ALL=C
+export LC_ALL
 # Push kernel to channel
 function push() {
     cd AnyKernel || exit 1
