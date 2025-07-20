@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/MSM8917-3.18.git'
+          default: 'https://github.com/malkist01/kernel-mido.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '64'
+          default: '22.1'
           required: true
       token:
           description: 'Telegram bot token'
