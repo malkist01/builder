@@ -23,8 +23,8 @@ SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
-CODENAME=j6primelte
-DEF=j6primelte_defconfig
+CODENAME=mido
+DEF=teletubies_defconfig
 CCACHE_DIR="~/.ccache"
 export CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-linux-android-"
 export CROSS_COMPILE_ARM32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
@@ -68,7 +68,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-A10-"${CODENAME}"-Arm64-"${DATE}".zip ./*
+    zip -r9 Teletubies-"${CODENAME}""${DATE}".zip ./*
     cd ..
 }
 compile
