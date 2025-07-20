@@ -1,4 +1,4 @@
-name: Testing
+name: Mido
 
 on:
   workflow_dispatch:
