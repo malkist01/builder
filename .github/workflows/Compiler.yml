@@ -47,7 +47,7 @@ jobs:
 
       - name: Compiling
         run: |
-          if [ "${DEVICE}" = "samsung" ]; then
+          if [ "${DEVICE}" = "mido" ]; then
             wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/clang.sh
             bash clang.sh
           else
