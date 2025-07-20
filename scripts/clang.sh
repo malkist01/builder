@@ -3,8 +3,8 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 echo "Nuke previous toolchains"
-git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc
-git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
+git clone --depth=1 https://github.com/malkist01/arm64.git -b gcc gcc
+git clone --depth=1 https://github.com/malkist01/arm.git -b gcc gcc32
           mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
