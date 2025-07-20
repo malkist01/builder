@@ -9,8 +9,8 @@ clang() {
     rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://gitea.com/k4ngcaribug/sdclang.git -b master --depth=1 clang
-        KBUILD_COMPILER_STRING="snapdragon clang"
+        git clone https://github.com/malkist01/azure-clang.git -b main --depth=1 clang
+        KBUILD_COMPILER_STRING="azure clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
     sudo apt install -y ccache
