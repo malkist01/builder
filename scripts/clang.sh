@@ -65,7 +65,7 @@ tgs() {
 # Send Build Info
 sendinfo() {
     tg "
-• sirCompiler Action •
+• Compiler Action •
 *Building on*: \`Github actions\`
 *Date*: \`${DATE}\`
 *Device*: \`${DEVICE} (${CODENAME})\`
@@ -100,8 +100,6 @@ compile() {
     if [ -d "out" ]; then
         rm -rf out && mkdir -p out
     fi
-
-    ./update_ksu.sh
 
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
