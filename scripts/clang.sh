@@ -88,7 +88,7 @@ finderr() {
         -d chat_id="$chat_id" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=markdown" \
-        -d sticker="CAACAgIAAxkBAAED3JViAplqY4fom_JEexpe31DcwVZ4ogAC1BAAAiHvsEs7bOVKQsl_OiME" \
+        -d sticker="CAADBQADZwADqZrmFoa87YicX2hwAg" \
         -d text="Build throw an error(s)"
     error_sticker
     exit 1
