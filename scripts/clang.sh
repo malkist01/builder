@@ -5,6 +5,8 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 
+curl -LSs "https://raw.githubusercontent.com/LeCmnGend/KernelSU/4.14/kernel/setup.sh" | bash -
+
 clang() {
     rm -rf clang
     echo "Cloning clang"
@@ -21,8 +23,19 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
 KERNEL_DIR=$(pwd)
-CACHE=1
-export CACHE
+#Ccache
+export USE_CCACHE=1
+export CCACHE_COMPILER_CHECK="%compiler% -dumpversion"
+export CCACHE_MAXFILES="0"
+export CCACHE_NOHASHDIR="true"
+export CCACHE_UMASK="0002"
+export CCACHE_COMPRESSION="true"
+export CCACHE_COMPRESSION_LEVEL="-3"
+export CCACHE_NOINODECACHE="true"
+export CCACHE_COMPILERTYPE="auto"
+export CCACHE_RUN_SECOND_CPP="true"
+export CCACHE_SLOPPINESS="file_macro,time_macros,include_file_mtime,include_file_ctime,file_stat_matches"
+export TZ=Asia/Jakarta
 export KBUILD_COMPILER_STRING
 ARCH=arm64
 export ARCH
