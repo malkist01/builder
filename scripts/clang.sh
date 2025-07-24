@@ -5,8 +5,6 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 
-curl -LSs "https://raw.githubusercontent.com/ThRE-Team/KernelSU-Next/refs/heads/next-time-susfs/kernel/setup.sh" | bash -s next-time-susfs
-
 clang() {
     rm -rf clang
     echo "Cloning clang"
