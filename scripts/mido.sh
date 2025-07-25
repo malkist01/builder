@@ -7,6 +7,8 @@ cd kernel
 
 rm -rf KernelSU
 
+curl -LSs "https://raw.githubusercontent.com/ThRE-Team/KernelSU-Next/refs/heads/next-time-susfs/kernel/setup.sh" | bash -s next-time-susfs
+
 clang() {
     rm -rf clang
     echo "Cloning clang"
