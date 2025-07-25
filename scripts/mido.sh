@@ -5,7 +5,7 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 
-rm-rf KernelSU
+rm -rf KernelSU
 
 clang() {
     rm -rf clang
