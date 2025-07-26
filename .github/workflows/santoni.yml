@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/R4.git'
+          default: 'https://github.com/malkist01/R4X.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: 'KSU'
+          default: 'susfs'
           required: true
       token:
           description: 'Telegram bot token'
