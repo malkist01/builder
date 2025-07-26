@@ -7,13 +7,7 @@ cd kernel
 
 rm -rf KernelSU
 
-git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 susfs4ksu
-            cp susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
-            cp susfs4ksu/kernel_patches/fs/* ./fs
-            cp susfs4ksu/kernel_patches/include/linux/* ./include/linux
-            patch -p1 < 50_add_susfs_in_kernel-4.9.patch
-
-curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next-susfs
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
 
 clang() {
     rm -rf clang
