@@ -45,7 +45,7 @@ KBUILD_BUILD_HOST="android"
 export KBUILD_BUILD_HOST
 KBUILD_BUILD_USER="malkist"
 export KBUILD_BUILD_USER
-DEVICE="Xiaomi Redmi 4X"
+DEVICE="Redmi 4X"
 export DEVICE
 CODENAME="santoni"
 export CODENAME
@@ -123,7 +123,6 @@ compile() {
                      CXX="ccache clang++" \
                             HOSTCC="ccache clang" \
                             HOSTCXX="ccache clang++" \
-                            LD=ld.lld \
                             AR=llvm-ar \
                              AS=llvm-as \
                              NM=llvm-nm \
