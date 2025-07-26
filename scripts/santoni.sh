@@ -13,8 +13,8 @@ clang() {
     rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
-        KBUILD_COMPILER_STRING="ZyC clang"
+        git clone https://github.com/malkist01/clang-azure.git -b main --depth=1 clang
+        KBUILD_COMPILER_STRING="azzure clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
     sudo apt install -y ccache
