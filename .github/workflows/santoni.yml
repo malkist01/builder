@@ -47,7 +47,7 @@ jobs:
 
       - name: Compiling
         run: |
-          if [ "${DEVICE}" = "mido" ]; then
+          if [ "${DEVICE}" = "santoni" ]; then
             wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/santoni.sh
             bash santoni.sh
           else
