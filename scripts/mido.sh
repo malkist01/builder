@@ -7,7 +7,7 @@ cd kernel
 
 rm -rf KernelSU
 
-curl -LSs "https://raw.githubusercontent.com/ThRE-Team/KernelSU-Next/refs/heads/next-time-susfs/kernel/setup.sh" | bash -s next-time-susfs
+curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
 
 clang() {
     rm -rf clang
