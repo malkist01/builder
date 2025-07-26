@@ -5,7 +5,7 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 
-rm -rf KernelSU
+rm -rf KernelSU-Next
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
 
