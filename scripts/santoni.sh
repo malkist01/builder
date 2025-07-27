@@ -118,18 +118,18 @@ compile() {
 
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
-        ARCH=$ARCH \
-               CC="ccache clang" \
-                     CXX="ccache clang++" \
-                            HOSTCC="ccache clang" \
-                            HOSTCXX="ccache clang++" \
-                            AR=llvm-ar \
-                             AS=llvm-as \
-                             NM=llvm-nm \
-                             OBJCOPY=llvm-objcopy \
-                            OBJDUMP=llvm-objdump \
-                             STRIP=llvm-strip \
-         LLVM=1 \
+          ARCH=$ARCH \
+          CC="clang" \
+          CXX="clang++" \
+          HOSTCC="clang" \
+          HOSTCXX="clang++" \
+          AR=llvm-ar \
+          AS=llvm-as \
+          NM=llvm-nm \
+          OBJCOPY=llvm-objcopy \
+          OBJDUMP=llvm-objdump \
+          STRIP=llvm-strip \
+          LLVM=1 \
         CROSS_COMPILE=aarch64-linux-gnu- \
         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
