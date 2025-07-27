@@ -1,4 +1,4 @@
-name: MidoSu
+name: Platina
 
 on:
   workflow_dispatch:
