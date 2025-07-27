@@ -7,8 +7,7 @@ cd kernel
 
 rm -rf KernelSU
 
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-{{branch}}
 clang() {
     rm -rf clang
     echo "Cloning clang"
@@ -45,7 +44,7 @@ KBUILD_BUILD_HOST="android"
 export KBUILD_BUILD_HOST
 KBUILD_BUILD_USER="malkist"
 export KBUILD_BUILD_USER
-DEVICE="Xiaomi Mi8 Lite"
+DEVICE="Xiaomi Mi 8 Lite"
 export DEVICE
 CODENAME="platina"
 export CODENAME
