@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/mid.git'
+          default: 'https://github.com/malkist01/Last.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: '14'
+          default: 'main'
           required: true
       token:
           description: 'Telegram bot token'
@@ -35,7 +35,7 @@ env:
 
 jobs:
   kernel-build:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-25.04
 
     steps:
       - name: Initializing environment
