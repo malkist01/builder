@@ -45,7 +45,7 @@ KBUILD_BUILD_HOST="android"
 export KBUILD_BUILD_HOST
 KBUILD_BUILD_USER="malkist"
 export KBUILD_BUILD_USER
-DEVICE="Xiaomi Redmi Note 4"
+DEVICE="Xiaomi Mi8 Lite"
 export DEVICE
 CODENAME="platina"
 export CODENAME
