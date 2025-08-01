@@ -5,21 +5,18 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 
-rm -rf KernelSU-Next
+rm -rf KernelSU
 
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-clang() {
-    rm -rf clang
-    echo "Cloning clang"
-    if [ ! -d "clang" ]; then
-        git clone https://github.com/malkist01/clang-azure.git -b main --depth=1 clang
-        KBUILD_COMPILER_STRING="azzure clang"
-        PATH="${PWD}/clang/bin:${PATH}"
-    fi
-    sudo apt install -y ccache
-    echo "Done"
-}
+  # setup clang
+  mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+
+  # setup gcc
+  git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git --single-branch --depth 1 gcc-64
+  git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git --single-branch --depth 1 gcc-32
+ 
+export PATH=${PWD}/clang/bin:${PWD}/gcc-64/bin:${PWD}/gcc-32/bin:$PATH 
 
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
@@ -45,9 +42,9 @@ KBUILD_BUILD_HOST="android"
 export KBUILD_BUILD_HOST
 KBUILD_BUILD_USER="malkist"
 export KBUILD_BUILD_USER
-DEVICE="Redmi 4X"
+DEVICE="Xiaomi Redmi Note 4"
 export DEVICE
-CODENAME="santoni"
+CODENAME="mido"
 export CODENAME
 DEFCONFIG="teletubies_defconfig"
 export DEFCONFIG
@@ -118,20 +115,25 @@ compile() {
 
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
-          ARCH=$ARCH \
-          CC="clang" \
-          CXX="clang++" \
-          HOSTCC="clang" \
-          HOSTCXX="clang++" \
-          AR=llvm-ar \
-          AS=llvm-as \
-          NM=llvm-nm \
-          OBJCOPY=llvm-objcopy \
-          OBJDUMP=llvm-objdump \
-          STRIP=llvm-strip \
-          LLVM=1 \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+         ARCH=$ARCH \
+         CC="ccache clang"
+         LD=ld.lld \
+         AS=llvm-as \
+         AR=llvm-ar \
+         NM=llvm-nm \
+         OBJCOPY=llvm-objcopy \
+         OBJDUMP=llvm-objdump \
+         READELF=llvm-readelf \
+         OBJSIZE=llvm-size \
+         STRIP=llvm-strip \
+         LLVM=1 \
+         LLVM_IAS=1 \
+         LLVM_AR=llvm-ar \
+         LLVM_NM=llvm-nm \
+         CLANG_TRIPLE=aarch64-linux-gnu- \
+         CROSS_COMPILE=aarch64-linux-android- \
+         CROSS_COMPILE_ARM32=arm-linux-androideabi- \
+         CROSS_COMPILE_COMPAT=arm-linux-androideabi-
 
     if ! [ -a "$IMAGE" ]; then
         finderr
@@ -144,7 +146,7 @@ compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-"${BRANCH}"-"${CODENAME}"-"${DATE}".zip ./*
+    zip -r9 Teletubies-SukiSU-"${BRANCH}"-"${CODENAME}"-"${DATE}".zip ./*
     cd ..
 }
 
