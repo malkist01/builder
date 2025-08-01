@@ -132,8 +132,7 @@ compile() {
          LLVM_NM=llvm-nm \
          CLANG_TRIPLE=aarch64-linux-gnu- \
          CROSS_COMPILE=aarch64-linux-android- \
-         CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-         CROSS_COMPILE_COMPAT=arm-linux-androideabi-
+         CROSS_COMPILE_ARM32=arm-linux-androideabi- 
 
     if ! [ -a "$IMAGE" ]; then
         finderr
