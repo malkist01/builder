@@ -16,7 +16,7 @@ curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kern
   git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git --single-branch --depth 1 gcc-64
   git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git --single-branch --depth 1 gcc-32
  
-export PATH=${PWD}/clang/bin:${PWD}/gcc-64/bin:${PWD}/gcc-32/bin:$PATH 
+export PATH=$(pwd)/clang/bin:$(pwd)/gcc-64/bin:$(pwd)/gcc-32/bin:$PATH 
 
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
