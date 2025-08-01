@@ -9,14 +9,7 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-  # setup clang
-  mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
-
-  # setup gcc
-  git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git --single-branch --depth 1 gcc-64
-  git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git --single-branch --depth 1 gcc-32
- 
-export PATH=$(pwd)/clang/bin:$(pwd)/gcc-64/bin:$(pwd)/gcc-32/bin:$PATH 
+mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
@@ -116,23 +109,20 @@ compile() {
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
-         CC="ccache clang"
-         LD=ld.lld \
-         AS=llvm-as \
+         CC="clang" \
+         CXX="clang++" \
+         HOSTCC="clang" \
+         HOSTCXX="clang++" \
          AR=llvm-ar \
+         AS=llvm-as \
          NM=llvm-nm \
          OBJCOPY=llvm-objcopy \
          OBJDUMP=llvm-objdump \
-         READELF=llvm-readelf \
-         OBJSIZE=llvm-size \
          STRIP=llvm-strip \
          LLVM=1 \
-         LLVM_IAS=1 \
-         LLVM_AR=llvm-ar \
-         LLVM_NM=llvm-nm \
-         CROSS_COMPILE=aarch64-linux-gnu- \
-         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-        
+        CROSS_COMPILE=aarch64-linux-gnu- \
+        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+
     if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
