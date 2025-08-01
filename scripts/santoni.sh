@@ -7,15 +7,18 @@ cd kernel
 
 rm -rf KernelSU
 
+# Downloading KernelSu
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
+# Downloading Clang
 mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
 KERNEL_DIR=$(pwd)
-#Ccache
+KBUILD_COMPILER_STRING="Aosp clang"
+PATH="${PWD}/clang/bin:${PATH}"
 export USE_CCACHE=1
 export CCACHE_COMPILER_CHECK="%compiler% -dumpversion"
 export CCACHE_MAXFILES="0"
