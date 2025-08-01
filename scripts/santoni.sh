@@ -130,10 +130,9 @@ compile() {
          LLVM_IAS=1 \
          LLVM_AR=llvm-ar \
          LLVM_NM=llvm-nm \
-         CLANG_TRIPLE=aarch64-linux-gnu- \
-         CROSS_COMPILE=aarch64-linux-android- \
-         CROSS_COMPILE_ARM32=arm-linux-androideabi- 
-
+         CROSS_COMPILE=aarch64-linux-gnu- \
+         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+        
     if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
