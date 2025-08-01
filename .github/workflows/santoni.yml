@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/R4X.git'
+          default: 'https://github.com/malkist01/mid.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: 'susfs'
+          default: '14'
           required: true
       token:
           description: 'Telegram bot token'
