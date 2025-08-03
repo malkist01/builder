@@ -7,6 +7,8 @@ cd kernel
 
 rm -rf KernelSU
 
+git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 --depth=1
+
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 clang() {
