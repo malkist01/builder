@@ -3,7 +3,7 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 rm -rf KernelSU
-git clone --depth=1  https://github.com/malkist01/KernelSU.git -b main KernelSU
+curl -LSs "https://raw.githubusercontent.com/5ec1cff/KernelSU/refs/heads/main/kernel/setup.sh" | bash -s main
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
@@ -33,7 +33,6 @@ export CROSS_COMPILE=aarch64-linux-android-
 export CROSS_COMPILE_ARM32=arm-linux-androideabi-
 export CONFIG_NO_ERROR_ON_MISMATCH=y
 export CONFIG_DEBUG_SECTION_MISMATCH=y
-export PATH="$(pwd)/KernelSU${PATH}"
 export PATH="$(pwd)/gcc-64/bin:$(pwd)/gcc-32/bin:${PATH}"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
