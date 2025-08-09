@@ -7,9 +7,11 @@ cd kernel
 
 rm -rf KernelSU
 
-# Downloading KernelSu
+git clone https://github.com/devnoname120/kernelsu-coccinelle
+cd kernelsu-coccinelle/classic-hooks 
+./apply.sh
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-
+echo "Nuke previous toolchains"
 # Downloading Clang
 mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
