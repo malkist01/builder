@@ -9,7 +9,9 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/22.0.0-20250805-release/Clang-22.0.0git-20250805.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+# Download Clang
+
+mkdir clang && curl  "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz" -RLO && tar -C clang/ -xf clang-*.tar.gz
 
 KBUILD_COMPILER_STRING="ZyC clang"
 PATH="${PWD}/clang/bin:${PATH}"
