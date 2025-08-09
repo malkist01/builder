@@ -9,6 +9,10 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
+      mkdir ${dir} && cd ${dir}
+          curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0-20250805-release/Clang-22.0.0git-20250805.tar.gz"
+          tar -zxf a.tar.gz
+
 clang() {
     rm -rf clang
     echo "Cloning clang"
