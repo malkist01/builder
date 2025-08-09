@@ -12,7 +12,7 @@ curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kern
 # Download Clang
 
 mkdir clang && cd clang
-     curl -Lo a.tar.gz  "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz
+     curl -Lo a.tar.gz  "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
       tar -zxf a.tar.gz
 
 KBUILD_COMPILER_STRING="ZyC clang"
@@ -115,19 +115,21 @@ compile() {
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
-         CC="clang" \
-         CXX="clang++" \
-         HOSTCC="clang" \
-         HOSTCXX="clang++" \
-         AR=llvm-ar \
-         AS=llvm-as \
+         CC=clang \
+         LD=ld.lld \
          NM=llvm-nm \
+         AR=llvm-ar \
+         STRIP=llvm-strip \
          OBJCOPY=llvm-objcopy \
          OBJDUMP=llvm-objdump \
-         STRIP=llvm-strip \
-         LLVM=1 \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+         READELF=llvm-readelf \
+         LLVM_IAS=1 \
+         HOSTCC=clang \
+         HOSTCXX=clang++ \
+         HOSTLD=ld.lld \
+         HOSTAR=llvm-ar \
+         CROSS_COMPILE=aarch64-linux-gnu- \
+         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
     if ! [ -a "$IMAGE" ]; then
         finderr
