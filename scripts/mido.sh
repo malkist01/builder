@@ -9,14 +9,20 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-# Download Clang
+dir="${outside}/ZyCClang"
 
-mkdir clang && cd clang
-     curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
-      tar -zxf a.tar.gz
+case $1 in
+  "setup" )
+    # Clone compiler
+    if [[ ! -d "${dir}" ]]; then
+      mkdir ${dir} && cd ${dir}
+	  curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
+	  tar -zxf a.tar.gz
+    fi
+  ;;
 
 KBUILD_COMPILER_STRING="ZyC clang"
-PATH="${PWD}/clang/bin:${PATH}"
+export PATH="${dir}/bin:/usr/bin:${PATH}"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
