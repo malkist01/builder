@@ -9,22 +9,10 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-      mkdir ${dir} && cd ${dir}
-          curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0-20250805-release/Clang-22.0.0git-20250805.tar.gz"
-          tar -zxf a.tar.gz
+mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/22.0.0-20250805-release/Clang-22.0.0git-20250805.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
-clang() {
-    rm -rf clang
-    echo "Cloning clang"
-    if [ ! -d "clang" ]; then
-        git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
-        KBUILD_COMPILER_STRING="ZyC clang"
-        PATH="${PWD}/clang/bin:${PATH}"
-    fi
-    sudo apt install -y ccache
-    echo "Done"
-}
-
+KBUILD_COMPILER_STRING="ZyC clang"
+PATH="${PWD}/clang/bin:${PATH}"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
