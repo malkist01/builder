@@ -9,9 +9,7 @@ rm -rf KernelSU
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-      mkdir clang && cd clang
-	  curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
-	  tar -zxf a.tar.gz
+mkdir clang && curl https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
 export PATH="clang/bin:/usr/bin:${PATH}"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
