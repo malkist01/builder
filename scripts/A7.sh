@@ -2,6 +2,9 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+git clone https://github.com/devnoname120/kernelsu-coccinelle
+cd kernelsu-coccinelle/classic-hooks 
+./apply.sh
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
