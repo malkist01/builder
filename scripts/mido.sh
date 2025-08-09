@@ -12,7 +12,7 @@ curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kern
 # Download Clang
 
 mkdir clang && cd clang
-     curl -Lo a.tar.gz  "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
+     curl -Lo a.tar.gz "https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz"
       tar -zxf a.tar.gz
 
 KBUILD_COMPILER_STRING="ZyC clang"
