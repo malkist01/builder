@@ -7,11 +7,22 @@ cd kernel
 
 rm -rf KernelSU
 
+git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 --depth=1
+
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-aria2c -o clang.tar.gz https://github.com/ZyCromerZ/Clang/releases/download/22.0.0git-20250805-release/Clang-22.0.0git-20250805.tar.gz
- mkdir $(pwd)/clang tar -zxf clang.tar.gz
-export PATH=(pwd)/clang/bin:/usr/bin:${PATH}
+clang() {
+    rm -rf clang
+    echo "Cloning clang"
+    if [ ! -d "clang" ]; then
+        git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
+        KBUILD_COMPILER_STRING="ZyC clang"
+        PATH="${PWD}/clang/bin:${PATH}"
+    fi
+    sudo apt install -y ccache
+    echo "Done"
+}
+
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
@@ -110,21 +121,19 @@ compile() {
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
-         CC=clang \
-         LD=ld.lld \
-         NM=llvm-nm \
+         CC="clang" \
+         CXX="clang++" \
+         HOSTCC="clang" \
+         HOSTCXX="clang++" \
          AR=llvm-ar \
-         STRIP=llvm-strip \
+         AS=llvm-as \
+         NM=llvm-nm \
          OBJCOPY=llvm-objcopy \
          OBJDUMP=llvm-objdump \
-         READELF=llvm-readelf \
-         LLVM_IAS=1 \
-         HOSTCC=clang \
-         HOSTCXX=clang++ \
-         HOSTLD=ld.lld \
-         HOSTAR=llvm-ar \
-         CROSS_COMPILE=aarch64-linux-gnu- \
-         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+         STRIP=llvm-strip \
+         LLVM=1 \
+        CROSS_COMPILE=aarch64-linux-gnu- \
+        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
     if ! [ -a "$IMAGE" ]; then
         finderr
