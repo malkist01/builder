@@ -6,24 +6,9 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 
 rm -rf KernelSU
-patch_kernel() {
-  [ -d patches ] || return 0
 
-  cd kernel
-  for patch in "$CUR_DIR"patches/*.patch; do
-    echo "Applying $(basename $patch)."
-    git apply $patch || exit 2
-  done
-  cd -
-}
-
-add_kernelsu() {
-  [ "$DONT_PATCH_KERNELSU" != true ] || return 0
-
-  cd kernel
-
-  # integrate kernelsu-next
-  curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+# integrate kernelsu-next
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 clang() {
     rm -rf clang
@@ -164,8 +149,6 @@ zipping() {
     cd ..
 }
 
-patch_kernel
-add_kernelsu
 clang
 sendinfo
 compile
