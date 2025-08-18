@@ -24,20 +24,6 @@ add_kernelsu() {
 
   # integrate kernelsu-next
   curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-  # prepare .config
-  make "${MAKE_FLAGS[@]}" $KERNEL_CONFIG
-
-  # update .config
-  scripts/config --file out/.config \
-    --enable CONFIG_KSU \
-    --disable CONFIG_KSU_WITH_KPROBES
-
-  # re-generate kernel config
-  make "${MAKE_FLAGS[@]}" savedefconfig
-  cp -f out/defconfig arch/arm64/configs/${KERNEL_CONFIG%% *}
-
-  cd -
-}
 
 clang() {
     rm -rf clang
