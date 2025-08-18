@@ -14,6 +14,7 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+rm -rf KernelSU
 
 SECONDS=0 # builtin bash timer
 ZIPNAME="Venom-X1-Ginkgo-$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M").zip"
@@ -147,7 +148,7 @@ echo -e "\nKernel compiled succesfully! Zipping up...\n"
 git restore arch/arm64/configs/vendor/teletubies_defconfig
 if [ -d "$AK3_DIR" ]; then
 cp -r $AK3_DIR AnyKernel3
-elif ! git clone -q https://github.com/k4ngcaribug/AnyKernel3; then
+elif ! git clone -q https://github.com/malkist01/anykernel3.git -b master; then
 echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
 exit 1
 fi
