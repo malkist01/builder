@@ -6,10 +6,38 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 
 rm -rf KernelSU
+patch_kernel() {
+  [ -d config/$DEVICE_CODENAME/$BUILD_CONFIG/patches ] || return 0
 
-git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 --depth=1
+  cd kernel
+  for patch in "$CUR_DIR"/config/"$DEVICE_CODENAME"/"$BUILD_CONFIG"/patches/*.patch; do
+    echo "Applying $(basename $patch)."
+    git apply $patch || exit 2
+  done
+  cd -
+}
 
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+add_kernelsu() {
+  [ "$DONT_PATCH_KERNELSU" != true ] || return 0
+
+  cd kernel
+
+  # integrate kernelsu-next
+  curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+  # prepare .config
+  make "${MAKE_FLAGS[@]}" $KERNEL_CONFIG
+
+  # update .config
+  scripts/config --file out/.config \
+    --enable CONFIG_KSU \
+    --disable CONFIG_KSU_WITH_KPROBES
+
+  # re-generate kernel config
+  make "${MAKE_FLAGS[@]}" savedefconfig
+  cp -f out/defconfig arch/arm64/configs/${KERNEL_CONFIG%% *}
+
+  cd -
+}
 
 clang() {
     rm -rf clang
@@ -150,6 +178,8 @@ zipping() {
     cd ..
 }
 
+patch_kernel
+add_kernelsu
 clang
 sendinfo
 compile
