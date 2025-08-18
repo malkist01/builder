@@ -7,10 +7,10 @@ cd kernel
 
 rm -rf KernelSU
 patch_kernel() {
-  [ -d config/$DEVICE_CODENAME/$BUILD_CONFIG/patches ] || return 0
+  [ -d patches ] || return 0
 
   cd kernel
-  for patch in "$CUR_DIR"/config/"$DEVICE_CODENAME"/"$BUILD_CONFIG"/patches/*.patch; do
+  for patch in "$CUR_DIR"patches/*.patch; do
     echo "Applying $(basename $patch)."
     git apply $patch || exit 2
   done
