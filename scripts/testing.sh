@@ -14,6 +14,8 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 rm -rf KernelSU
+git clone --depth=1 -b 17 https://gitlab.com/nekoprjkt/aosp-clang
+echo "Cloning failed! Aborting..."
 
 SECONDS=0 # builtin bash timer
 ZIPNAME="Venom-X1-Ginkgo-$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M").zip"
@@ -88,37 +90,6 @@ finderr() {
 # Now let's clone gcc/clang on HOME dir
 # And after that , the script start the compilation of the kernel it self
 # For regen the defconfig . use the regen.sh script
-
-if ! [ -d "${CLANG_DIR}" ]; then
-echo "Clang not found! Cloning to ${TC_DIR}..."
-if ! git clone --depth=1 -b 17 https://gitlab.com/nekoprjkt/aosp-clang ${CLANG_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
-
-if ! [ -d "${GCC_64_DIR}" ]; then
-echo "gcc not found! Cloning to ${GCC_64_DIR}..."
-if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
-
-if ! [ -d "${GCC_32_DIR}" ]; then
-echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
-if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${GCC_32_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
-
-if [[ $1 = "-k" || $1 = "--ksu" ]]; then
-	echo -e "\nCleanup KernelSU first on local build\n"
-	rm -rf KernelSU drivers/kernelsu
-else
-	echo -e "\nSet No KernelSU Install, just skip\n"
-fi
 
 # Set function for override kernel name and variants
 if [[ $1 = "-k" || $1 = "--ksu" ]]; then
