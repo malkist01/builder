@@ -10,7 +10,6 @@
 #
 # Use this script on root of kernel directory
 # Dependencies
-
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
@@ -145,10 +144,10 @@ make -j$(nproc --all) O=out \
 
 if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && [ -f "out/arch/arm64/boot/dtbo.img" ]; then
 echo -e "\nKernel compiled succesfully! Zipping up...\n"
-git restore arch/arm64/configs/vendor/teletubies_defconfig
+git restore arch/arm64/configs/teletubies_defconfig
 if [ -d "$AK3_DIR" ]; then
 cp -r $AK3_DIR AnyKernel3
-elif ! git clone -q https://github.com/malkist01/anykernel3.git -b master; then
+elif ! git clone -q https://github.com/k4ngcaribug/AnyKernel3; then
 echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
 exit 1
 fi
