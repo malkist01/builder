@@ -89,6 +89,14 @@ finderr() {
 # And after that , the script start the compilation of the kernel it self
 # For regen the defconfig . use the regen.sh script
 
+if ! [ -d "${CLANG_DIR}" ]; then
+echo "Clang not found! Cloning to ${TC_DIR}..."
+if ! git clone --depth=1 -b 17 https://gitlab.com/nekoprjkt/aosp-clang ${CLANG_DIR}; then
+echo "Cloning failed! Aborting..."
+exit 1
+fi
+fi
+
 if ! [ -d "${GCC_64_DIR}" ]; then
 echo "gcc not found! Cloning to ${GCC_64_DIR}..."
 if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
