@@ -39,8 +39,6 @@ TOTAL_RAM_GB="$(free -g | awk '/^Mem:/{print $2}')"
 DATE="$(date '+%Y-%m-%d %H:%M:%S')"
 MESSAGE_ERROR="Error Build untuk $PHONE Dibatalkan!"
 kernel="out/arch/arm64/boot/Image.gz-dtb"
-dtb="out/arch/arm64/boot/dtb.img"
-dtbo="out/arch/arm64/boot/dtbo.img"
 
 # ============================
 # Warna output
@@ -179,8 +177,7 @@ MAKE="./makeparallel"
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
     [ ! -d AnyKernel3 ] && git clone -q https://github.com/malkist01/anykernel.git -b master
-    cp -f "$kernel" "$dtb" AnyKernel3/
-    [ -f "$dtbo" ] && cp -f "$dtbo" AnyKernel3/
+    cp -f "$kernel" AnyKernel3/
     cd AnyKernel3 || return 1
     zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
     cd .. && rm -rf AnyKernel3
