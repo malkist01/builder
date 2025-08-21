@@ -43,14 +43,7 @@ jobs:
           git config --global user.name "malkist01"
           git config --global user.email "aripujiyanto0812@gmail.com"
           git clone https://github.com/akhilnarang/scripts x
-          cd x/setup && bash android_build_env.sh
-
-      - name: Processing Submodules
-        run: |
-          git submodule update --init --remote --rebase --recursive android/Installer
-          git submodule update --init --remote --rebase --recursive KernelSU
-          sed -i -e '$a\'$'\n''CONFIG_KSU=y\nCONFIG_KSU_SUSFS=y\nCONFIG_KSU_MANUAL_HOOK=y\nCONFIG_KSU_SUSFS_HAS_MAGIC_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_PATH=y\nCONFIG_KSU_SUSFS_SUS_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_KSU_DEFAULT_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_KSTAT=y\nCONFIG_KSU_SUSFS_TRY_UMOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SPOOF_UNAME=y\nCONFIG_KSU_SUSFS_ENABLE_LOG=y\nCONFIG_KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS=y\nCONFIG_KSU_SUSFS_OPEN_REDIRECT=y' arch/arm64/configs/teletubies_defconfig
-          git submodule update --init --remote --rebase --recursive utils          
+          cd x/setup && bash android_build_env.sh 
 
       - name: Compiling
         run: |
@@ -60,3 +53,10 @@ jobs:
           else
             echo "Device not supported yet"
           fi
+
+      - name: Processing Submodules
+        run: |
+          git submodule update --init --remote --rebase --recursive android/Installer
+          git submodule update --init --remote --rebase --recursive KernelSU
+          sed -i -e '$a\'$'\n''CONFIG_KSU=y\nCONFIG_KSU_SUSFS=y\nCONFIG_KSU_MANUAL_HOOK=y\nCONFIG_KSU_SUSFS_HAS_MAGIC_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_PATH=y\nCONFIG_KSU_SUSFS_SUS_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_KSU_DEFAULT_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_KSTAT=y\nCONFIG_KSU_SUSFS_TRY_UMOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SPOOF_UNAME=y\nCONFIG_KSU_SUSFS_ENABLE_LOG=y\nCONFIG_KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS=y\nCONFIG_KSU_SUSFS_OPEN_REDIRECT=y' arch/arm64/configs/teletubies_defconfig
+          git submodule update --init --remote --rebase --recursive utils         
