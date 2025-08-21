@@ -177,8 +177,8 @@ MAKE="./makeparallel"
        git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
     cd AnyKernel || return 1
-    zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
-    cd .. && rm -rf AnyKernel
+    zip -r9 "../$ZIPNAME" .zip ./*
+    cd ..
 
     make O=out ARCH=arm64 savedefconfig
     mv out/defconfig out/full_defconfig
