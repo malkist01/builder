@@ -4,10 +4,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-          git submodule update --init --remote --rebase --recursive android/Installer
-          git submodule update --init --remote --rebase --recursive KernelSU
+
           sed -i -e '$a\'$'\n''CONFIG_KSU=y\nCONFIG_KSU=y\nCONFIG_KSU_MANUAL_HOOK=y' arch/arm64/configs/teletubies_defconfig
-          git submodule update --init --remote --rebase --recursive utils         
 
 wget https://raw.githubusercontent.com/malkist01/KernelSU-Patch/main/KSU.patch
 
