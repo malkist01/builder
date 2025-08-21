@@ -10,7 +10,7 @@ cd kernel
           git submodule update --init --remote --rebase --recursive utils         
 
 wget https://raw.githubusercontent.com/malkist01/KernelSU-Patch/main/KSU.patch
-rm -rf KernelSU
+
 patch -p1 < KSU.patch
 
 # integrate kernelsu-next
