@@ -175,7 +175,7 @@ MAKE="./makeparallel"
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
     [ ! -d AnyKernel3 ] && git clone -q https://github.com/malkist01/anykernel.git -b master
-    cp -f "$kernel" AnyKernel3/
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
     cd AnyKernel3 || return 1
     zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
     cd .. && rm -rf AnyKernel3
