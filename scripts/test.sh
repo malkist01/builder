@@ -4,10 +4,9 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-
+wget https://raw.githubusercontent.com/Frostleaft07/KernelSU-Patch/main/KSU.patch
 rm -rf KernelSU
-
-git fetch https://github.com/KanonifyX/android_kernel_sony_tama Uclamp
+patch -p1 < KSU.patch
 
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
