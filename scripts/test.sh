@@ -18,7 +18,7 @@ exec > >(tee -a build.log) 2>&1
 # ============================
 PHONE="mido"
 DEFCONFIG="teletubies_defconfig"
-CLANG="Neutron Clang 19"
+CLANG="Neutron Clang 22"
 ZIPNAME="Teletubies-SukiSu-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
 CHAT_ID="-1002287610863"
@@ -174,11 +174,11 @@ MAKE="./makeparallel"
 
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
-    [ ! -d AnyKernel3 ] && git clone -q https://github.com/malkist01/anykernel.git -b master
-    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
-    cd AnyKernel3 || return 1
+       git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+    cd AnyKernel || return 1
     zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
-    cd .. && rm -rf AnyKernel3
+    cd .. && rm -rf AnyKernel
 
     make O=out ARCH=arm64 savedefconfig
     mv out/defconfig out/full_defconfig
