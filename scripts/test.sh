@@ -4,6 +4,11 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+          git submodule update --init --remote --rebase --recursive android/Installer
+          git submodule update --init --remote --rebase --recursive KernelSU
+          sed -i -e '$a\'$'\n''CONFIG_KSU=y\nCONFIG_KSU_SUSFS=y\nCONFIG_KSU_MANUAL_HOOK=y\nCONFIG_KSU_SUSFS_HAS_MAGIC_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_PATH=y\nCONFIG_KSU_SUSFS_SUS_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_KSU_DEFAULT_MOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SUS_KSTAT=y\nCONFIG_KSU_SUSFS_TRY_UMOUNT=y\nCONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT=y\nCONFIG_KSU_SUSFS_SPOOF_UNAME=y\nCONFIG_KSU_SUSFS_ENABLE_LOG=y\nCONFIG_KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS=y\nCONFIG_KSU_SUSFS_OPEN_REDIRECT=y' arch/arm64/configs/teletubies_defconfig
+          git submodule update --init --remote --rebase --recursive utils         
+
 wget https://raw.githubusercontent.com/Frostleaft07/KernelSU-Patch/main/KSU.patch
 rm -rf KernelSU
 patch -p1 < KSU.patch
