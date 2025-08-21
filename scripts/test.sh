@@ -7,6 +7,8 @@ cd kernel
 
 rm -rf KernelSU
 
+git fetch https://github.com/KanonifyX/android_kernel_sony_tama Uclamp
+
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
