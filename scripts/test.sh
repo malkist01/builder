@@ -164,13 +164,12 @@ MAKE="./makeparallel"
     OBJDUMP=llvm-objdump \
     STRIP=llvm-strip \
     CC=clang \
-    DTC_EXT=dtc \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee full-build.log
 
     grep -Ei "(error|warning)" full-build.log > log.txt
 
-    if grep -q "error:" full-build.log || [ ! -f out/arch/arm64/boot/Image ]; then
+    if grep -q "error:" full-build.log || [ ! -f out/arch/arm64/boot/Image.gz-dtb ]; then
         echo -e "${red}[!] Build gagal${reset}"
         send_log
         cleanup_files
@@ -210,7 +209,7 @@ function upload_fullbuild_log() {
 
 function upload_defconfig() {
     [ -f out/full_defconfig ] || return
-    cp out/full_defconfig surya_defconfig
+    cp out/full_defconfig teletubies_defconfig
     curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"teletubies_defconfig" -F caption="Full Defconfig - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
     rm -f teletubies_defconfig
 }
