@@ -13,8 +13,8 @@ exec > >(tee -a build.log) 2>&1
 # ============================
 PHONE="mido"
 DEFCONFIG="teletubies_defconfig"
-CLANG="Neutron Clang 22"
-ZIPNAME="Teletubies-SukiSu-$(date '+%Y%m%d-%H%M').zip"
+CLANG="ZyC Clang 22"
+ZIPNAME="Teletubies-mido-A16-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
 CHAT_ID="-1002287610863"
 COMPILERDIR="$(pwd)/../zyc-clang"
