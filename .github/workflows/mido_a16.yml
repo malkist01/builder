@@ -48,8 +48,8 @@ jobs:
       - name: Compiling
         run: |
           if [ "${DEVICE}" = "mido" ]; then
-            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/test.sh
-            bash test.sh
+            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/mido_a16.sh
+            bash mido_a16.sh
           else
             echo "Device not supported yet"
           fi
