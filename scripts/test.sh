@@ -6,12 +6,6 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-          sed -i -e '$a\'$'\n''CONFIG_KSU=y\nCONFIG_KSU=y\nCONFIG_KSU_MANUAL_HOOK=y' arch/arm64/configs/teletubies_defconfig
-
-wget https://raw.githubusercontent.com/malkist01/KernelSU-Patch/main/KSU.patch
-
-patch -p1 < KSU.patch
-
 # integrate sukisu-ultra
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
