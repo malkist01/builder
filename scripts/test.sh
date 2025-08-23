@@ -6,7 +6,9 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-git fetch https://github.com/KanonifyX/android_kernel_sony_tama && git cherry-pick 2a2b02b
+git checkout main
+git cherry-pick 2a2b02b
+
 
 # integrate sukisu-ultra
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
