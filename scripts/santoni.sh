@@ -6,10 +6,12 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 
 rm -rf KernelSU
+
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+
 echo "Nuke previous toolchains"
 # Downloading Clang
-wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh
+bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
 
 export PATH="$(pwd)/greenforce-clang/bin:$PATH"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
