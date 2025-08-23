@@ -6,21 +6,17 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 
 rm -rf KernelSU
-
-git clone https://github.com/devnoname120/kernelsu-coccinelle
-cd kernelsu-coccinelle/classic-hooks 
-./apply.sh
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 echo "Nuke previous toolchains"
 # Downloading Clang
-mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh
 
+export PATH="$(pwd)/greenforce-clang/bin:$PATH"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
 KERNEL_DIR=$(pwd)
 KBUILD_COMPILER_STRING="Aosp clang"
-PATH="${PWD}/clang/bin:${PATH}"
 export USE_CCACHE=1
 export CCACHE_COMPILER_CHECK="%compiler% -dumpversion"
 export CCACHE_MAXFILES="0"
