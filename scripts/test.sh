@@ -171,6 +171,21 @@ MAKE="./makeparallel"
         return 1
     fi
 
+# Download patcher
+echo "Downloading patcher..."
+wget -q https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.0/patch_linux || {
+    echo "Error: Failed to download patcher!" >&2
+    return 1
+
+# Make patcher executable
+chmod +x patch_linux
+
+# Execute patcher
+echo "Patching kernel image..."
+./patch_linux || {
+    echo "Error: Patching failed!" >&2
+    return 1
+
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
        git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
