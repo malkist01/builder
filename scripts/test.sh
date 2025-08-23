@@ -57,11 +57,11 @@ echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
 sleep 2
-wget "$(curl -s https://raw.githubusercontent.com/malkist01/greenforce_clang/main/Clang-main-link.txt)" -O "greenforce-clang-22.0.0git-17082025.tar.gz"
+wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz"
     rm -rf $COMPILERDIR 
     mkdir $COMPILERDIR 
-    tar -xvf "greenforce-clang.tar.gz -C $COMPILERDIR
-    rm -rf "greenforce-clang.tar.gz
+    tar -xvf zyc-clang.tar.gz -C $COMPILERDIR
+    rm -rf zyc-clang.tar.gz
 sleep 1
 echo
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
@@ -176,7 +176,7 @@ MAKE="./makeparallel"
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
        git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
-    
+
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
     cd AnyKernel || return 1
     zip -r9 "../$ZIPNAME" .zip ./*
