@@ -172,10 +172,14 @@ MAKE="./makeparallel"
     fi
 
 # Download patcher
+}
+
+# Download patcher
 echo "Downloading patcher..."
 wget -q https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.0/patch_linux || {
     echo "Error: Failed to download patcher!" >&2
-    return 1
+    exit 1
+}
 
 # Make patcher executable
 chmod +x patch_linux
@@ -184,7 +188,8 @@ chmod +x patch_linux
 echo "Patching kernel image..."
 ./patch_linux || {
     echo "Error: Patching failed!" >&2
-    return 1
+    exit 1
+}
 
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
