@@ -57,11 +57,11 @@ echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
 sleep 2
-wget "$(curl -s https://raw.githubusercontent.com/malkist01/Clang/main/Clang-main-link.txt)" -O "greenforce-clang-22.0.0git-17082025.tar.gz"
+wget "$(curl -s https://raw.githubusercontent.com/malkist01/greenforce_clang/main/Clang-main-link.txt)" -O "greenforce-clang-22.0.0git-17082025.tar.gz"
     rm -rf $COMPILERDIR 
     mkdir $COMPILERDIR 
-    tar -xvf zyc-clang.tar.gz -C $COMPILERDIR
-    rm -rf zyc-clang.tar.gz
+    tar -xvf "greenforce-clang.tar.gz -C $COMPILERDIR
+    rm -rf "greenforce-clang.tar.gz
 sleep 1
 echo
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
