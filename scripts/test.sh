@@ -171,28 +171,6 @@ MAKE="./makeparallel"
         return 1
     fi
 
-#=============================#
-#      PATCH KPM IF ENABLED   #
-#=============================#
-
-# Patch kpm only if CONFIG_KPM=y
-grep -q "^CONFIG_KPM=y" "$OUT_DIR/.config"; th
-
-# Download patch_linux from latest release
-    curl -L -o patch_linux "https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
-
-    # Make patch executable and run
-    chmod +x patch_linux
-    ./patch_linux; then
-
-    # Replace Image with patched oImage
-        rm -f Image Image.gz-dtb
-        mv oImage Image
-
-    # Compress and append DTBs
-    gzip -c Image > Image.gz
-    cat Image.gz dts/*/*.dtb > Image.gz-dtb
-
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
        git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
