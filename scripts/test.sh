@@ -176,40 +176,22 @@ MAKE="./makeparallel"
 #=============================#
 
 # Patch kpm only if CONFIG_KPM=y
-if grep -q "^CONFIG_KPM=y" "$OUT_DIR/.config"; then
-    cd kernel
+grep -q "^CONFIG_KPM=y" "$OUT_DIR/.config"; th
 
-    # Download patch_linux from latest release
-    PATCH_URL="https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
-    if ! curl -L -o patch_linux "$PATCH_URL"; then
-        send_telegram_message "❌ Failed to download patch_linux"
-        exit 1
-    fi
+# Download patch_linux from latest release
+    curl -L -o patch_linux "https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
 
     # Make patch executable and run
     chmod +x patch_linux
-    if ! ./patch_linux; then
-        send_telegram_message "❌ Failed to apply patch"
-        exit 1
-    fi
+    ./patch_linux; then
 
     # Replace Image with patched oImage
-    if [ -f "oImage" ]; then
         rm -f Image Image.gz-dtb
         mv oImage Image
-    else
-        send_telegram_message "❌ Patching failed - oImage not found"
-        exit 1
-    fi
 
     # Compress and append DTBs
     gzip -c Image > Image.gz
     cat Image.gz dts/*/*.dtb > Image.gz-dtb
-
-    # Back to working directory
-    cd kernel
-fi
-
 
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
