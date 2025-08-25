@@ -6,8 +6,6 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-git cherry-pick https://github.com/KanonifyX/android_kernel_sony_tama/commit/2a2b02b9ee1a64c426bcb5a4452caeb08e63f81b
-
 # integrate sukisu-ultra
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
@@ -172,6 +170,46 @@ MAKE="./makeparallel"
         cleanup_files
         return 1
     fi
+
+#=============================#
+#      PATCH KPM IF ENABLED   #
+#=============================#
+
+# Patch kpm only if CONFIG_KPM=y
+if grep -q "^CONFIG_KPM=y" "$OUT_DIR/.config"; then
+    cd kernel
+
+    # Download patch_linux from latest release
+    PATCH_URL="https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
+    if ! curl -L -o patch_linux "$PATCH_URL"; then
+        send_telegram_message "❌ Failed to download patch_linux"
+        exit 1
+    fi
+
+    # Make patch executable and run
+    chmod +x patch_linux
+    if ! ./patch_linux; then
+        send_telegram_message "❌ Failed to apply patch"
+        exit 1
+    fi
+
+    # Replace Image with patched oImage
+    if [ -f "oImage" ]; then
+        rm -f Image Image.gz-dtb
+        mv oImage Image
+    else
+        send_telegram_message "❌ Patching failed - oImage not found"
+        exit 1
+    fi
+
+    # Compress and append DTBs
+    gzip -c Image > Image.gz
+    cat Image.gz dts/*/*.dtb > Image.gz-dtb
+
+    # Back to working directory
+    cd kernel
+fi
+
 
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
