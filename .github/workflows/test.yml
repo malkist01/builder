@@ -9,7 +9,7 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/mid.git'
+          default: 'https://github.com/malkist01/su-mid.git'
           required: true
       branch:
           description: 'Kernel source branch'
