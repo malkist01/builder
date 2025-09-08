@@ -7,11 +7,9 @@ cd kernel
 
 rm -rf KernelSU
 
-git remote add ksu https://github.com/Frostleaft07/android_kernel_realme_mt6765
+git fetch https://github.com/KanonifyX/android_kernel_sony_tama
 
-git fetch ksu 4.9.207-KSU
-
-git cherry-pick -m 1 4bd9653b6884275e955d92b3c75b34d7b6e314a6
+git cherry-pick -m 1 2a2b02b9ee1a64c426bcb5a4452caeb08e63f81b
 
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
