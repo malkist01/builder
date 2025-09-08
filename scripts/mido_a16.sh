@@ -12,7 +12,7 @@ exec > >(tee -a build.log) 2>&1
 # Setup
 # ============================
 PHONE="mido"
-DEFCONFIG="teletubies_defconfig"
+DEFCONFIG="mido_defconfig"
 CLANG="ZyC Clang 22"
 ZIPNAME="Teletubies-mido-A16-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
