@@ -7,9 +7,7 @@ cd kernel
 
 rm -rf KernelSU
 
-git fetch https://github.com/KanonifyX/android_kernel_sony_tama
-
-git cherry-pick -m 1 2a2b02b9ee1a64c426bcb5a4452caeb08e63f81b
+git fetch https://github.com/KanonifyX/android_kernel_sony_tama/commit && git cherry-pick 2a2b02b9ee1a64c426bcb5a4452caeb08e63f81b
 
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
