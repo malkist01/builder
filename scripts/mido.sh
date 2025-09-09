@@ -10,9 +10,9 @@ rm -rf KernelSU
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-test
 
-git fetch https://github.com/KanonifyX/android_kernel_tama_sdm845-old ksu
+git fetch https://github.com/KanonifyX/android_kernel_sony_tama.git master
 
-git cherry-pick 35a5b1ae05ac28ed4496fa612fd5459925e6407c
+git cherry-pick 2a2b02b9ee1a64c426bcb5a4452caeb08e63f81b
 
 clang() {
     rm -rf clang
