@@ -5,11 +5,9 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 rm -rf KernelSU
-git fetch https://gitlab.com/androidsantoni/kernel/kernel_xiaomi_msm8937.git 13-ksunxt
-git cherry-pick 9fed47bbbf253c56cbda71c9635ef53fbe1917c6
-git cherry-pick --continue
 
-# integrate kernelsu-next
+# integrate kernelsu-SukiSu
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 clang() {
     rm -rf clang
