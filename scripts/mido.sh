@@ -7,15 +7,9 @@ cd kernel
 
 rm -rf KernelSU
 
-git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 susfs4ksu
-            cp susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
-            cp susfs4ksu/kernel_patches/fs/* ./fs
-            cp susfs4ksu/kernel_patches/include/linux/* ./include/linux
-            patch -p1 < 50_add_susfs_in_kernel-4.9.patch
+git fetch https://gitlab.com/androidsantoni/kernel/kernel_xiaomi_msm8937.git 13-ksunxt-susfs
 
-git fetch https://github.com/KanonifyX/android_kernel_tama_sdm845-old ksu
-
-git cherry-pick 35a5b1ae05ac28ed4496fa612fd5459925e6407c
+git cherry-pick 56c55b692a00d90c0568a57ef5a8ed0daa23bb9a
 
 # integrate kernelsu-next
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-test
