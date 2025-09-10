@@ -5,8 +5,8 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 rm -rf KernelSU
-git fetch https://gitlab.com/androidsantoni/kernel/kernel_xiaomi_msm8937.git 13-ksunxt-susfs
-git cherry-pick 56c55b692a00d90c0568a57ef5a8ed0daa23bb9a
+git fetch https://gitlab.com/androidsantoni/kernel/kernel_xiaomi_msm8937.git 13-ksunxt
+git cherry-pick 9fed47bbbf253c56cbda71c9635ef53fbe1917c6
 git cherry-pick --continue
 
 # integrate kernelsu-next
