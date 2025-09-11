@@ -10,7 +10,7 @@ set -euo pipefail
 
 
 # Set kernel directory to current working directory
-KERNEL_DIR="$(pwd)"
+KERNEL_DIR="KERNEL"
 
 cd "$KERNEL_DIR"
 
