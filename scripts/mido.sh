@@ -7,6 +7,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 -b lineage-17.1 gcc-32
       mkdir -p "gcc-64"
       curl -Lo gcc-15.2.0.tar.gz "https://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-15.2.0/gcc-15.2.0.tar.gz"
       tar -zxf gcc-15.2.0.tar.gz -C "gcc-64" --strip-components=1
