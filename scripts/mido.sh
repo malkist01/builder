@@ -16,7 +16,9 @@ cd "$KERNEL_DIR"
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
-# Cloning Toolchain
+# Path to clang
+CLANGDIR="/workspace"
+
 git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 "$CLANGDIR"
 
 # Set output directory for the build
@@ -28,8 +30,6 @@ KERNEL_IMAGE_DIR="$OUT_DIR/arch/arm64/boot"
 # Path to kernel image
 KERNEL_IMAGE="$KERNEL_IMAGE_DIR/Image.gz-dtb"
 
-# Path to clang
-CLANGDIR="/workspace"
 
 # Codename device
 CODENAME="mido"
