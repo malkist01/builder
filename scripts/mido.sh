@@ -213,7 +213,7 @@ if [ -f "$KERNEL_IMAGE" ]; then
     cp "$KERNEL_IMAGE" "$ANYKERNEL_DIR/Image.gz-dtb"
 
     # Create flashable zip
-    cd "$ANYKERNEL_DIR"
+    
     ZIP_NAME="${KERNEL_FLASH_NAME}-$(date +%Y%m%d)-${KERNEL_COMMIT_ID}.zip"
     zip -r9 "../$ZIP_NAME" ./* > /dev/null
     cd "$KERNEL_DIR"
