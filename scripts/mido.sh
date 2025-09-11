@@ -17,7 +17,7 @@ cd "$KERNEL_DIR"
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 # Path to clang
-CLANGDIR="/workspace"
+CLANGDIR="clang"
 
 git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 "$CLANGDIR"
 
