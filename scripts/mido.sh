@@ -197,7 +197,10 @@ fi
 #=============================#
 
 # If kernel image exists, package it
-if [ -f "$KERNEL_IMAGE" ]; then
+if [ -a "$KERNEL_IMAGE" ]; then
+        finderr
+        exit 1
+     fi
 
     # Clone AnyKernel3 if it doesn't exist
     if [ ! -d "$ANYKERNEL_DIR" ]; then
