@@ -1,16 +1,16 @@
 #!/bin/bash
 
-git clone $REPO -b $BRANCH "$KERNEL_DIR"
-
 set -euo pipefail
 
 #=============================#
 #        CONFIG SECTION       #
 #=============================#
 
-
 # Set kernel directory to current working directory
+
 KERNEL_DIR="KERNEL"
+
+git clone $REPO -b $BRANCH "$KERNEL_DIR"
 
 cd "$KERNEL_DIR"
 
