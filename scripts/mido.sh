@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git clone $REPO -b $BRANCH $KERNEL_DIR
+git clone $REPO -b $BRANCH "$KERNEL_DIR"
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ set -euo pipefail
 # Set kernel directory to current working directory
 KERNEL_DIR="$(pwd)"
 
-cd $KERNEL_DIR
+cd "$KERNEL_DIR"
 
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
