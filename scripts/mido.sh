@@ -1,233 +1,68 @@
-#!/bin/bash
-
-set -euo pipefail
-
-#=============================#
-#        CONFIG SECTION       #
-#=============================#
-
-# Set kernel directory to current working directory
-
-KERNEL_DIR="KERNEL"
-
-git clone $REPO -b $BRANCH "$KERNEL_DIR"
-
-cd "$KERNEL_DIR"
-
+#!/usr/bin/env bash
+rm -rf kernel
+git clone $REPO -b $BRANCH kernel 
+cd kernel
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-
-# Path to clang
-
-CLANGDIR="clang"
-mkdir -p "$CLANGDIR"
-      curl -Lo WeebX-Clang-20.0.0git.tar.gz "https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz"
-      tar -zxf WeebX-Clang-20.0.0git.tar.gz -C "$CLANGDIR" --strip-components=1
-        KBUILD_COMPILER_STRING="WeebX-Clang"
-        PATH="${PWD}/"$CLANGDIR"/bin:${PATH}"
-
-# Set output directory for the build
-OUT_DIR="$KERNEL_DIR/out"
-
-# Path to compiled kernel image directory
-KERNEL_IMAGE_DIR="$OUT_DIR/arch/arm64/boot"
-
-# Path to kernel image
-KERNEL_IMAGE="$KERNEL_IMAGE_DIR/Image.gz-dtb"
-
-
-# Codename device
-CODENAME="mido"
-
-export TZ=Asia/Jakarta
-
-# Defconfig file for building
-CONFIG_NAME="mido_defconfig"
-
-# AnyKernel3 repository and branch
-ANYKERNEL_REPO="https://github.com/malkist01/anykernel3.git"
-ANYKERNEL_BRANCH="master"
-ANYKERNEL_DIR="AnyKernel3"
-
-# Kernel flashable file name
-KERNEL_FLASH_NAME="Teletubies_$CODENAME"
-
-# Kernel source branch and latest commit id
-KERNEL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-KERNEL_COMMIT_ID=$(git rev-parse --short=7 HEAD)
-
-# Telegram bot token and group chat id
-BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
-CHAT_ID="-1002287610863"
-
-# Log file path
-LOG_FILE="$KERNEL_DIR/build.log"
-
-#=============================#
-#     TELEGRAM FUNCTIONS     #
-#=============================#
-
-# Escape characters for markdown-v2 formatting in telegram
-escape_markdown_v2() { 
-    echo "$1" | sed -e 's/\\/\\\\/g' -e 's/_/\\_/g' -e 's/\*/\\*/g' -e 's/\[/\\[/g' -e 's/\]/\\]/g' -e 's/(/\\(/g' -e 's/)/\\)/g' -e 's/~/\\~/g' -e 's/`/\\`/g' -e 's/>/\\>/g' -e 's/#/\\#/g' -e 's/+/\\+/g' -e 's/-/\\-/g' -e 's/=/\\=/g' -e 's/|/\\|/g' -e 's/{/\\{/g' -e 's/}/\\}/g';
-}
-
-# Send a text message to telegram
-send_telegram_message() {
-    local MESSAGE="$1"
-    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-        -d "chat_id=$CHAT_ID" \
-        -d "text=$MESSAGE"
-}
-
-# Send a file to telegram
-send_telegram_file() {
-    local FILE_PATH="$1"
-    local FILE_NAME=$(basename "$FILE_PATH")
-    local ESCAPED_NAME=$(escape_markdown_v2 "$FILE_NAME")
-    local CAPTION="\`$ESCAPED_NAME\`"
-
-    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
-        -F "chat_id=$CHAT_ID" \
-        -F "document=@$FILE_PATH" \
-        -F "caption=$CAPTION" \
-        -F "parse_mode=MarkdownV2"
-}
-
-#=============================#
-#      STOP HANDLING         #
-#=============================#
-
-# Handle script interruption (SIGINT or error)
-stop_handler() {
-    send_telegram_message "⚠️ Compilation was unexpectedly stopped!"
-    [ -f "$LOG_FILE" ] && send_telegram_file "$LOG_FILE"
-    exit 1
-}
-
-# Trap interrupt and error signals
-trap stop_handler ERR INT
-
-#=============================#
-#         START BUILD         #
-#=============================#
-
-# Notify build start
-send_telegram_message "🔨 Starting kernel compilation for $CONFIG_NAME on branch $KERNEL_BRANCH..."
-
-# Export environment variables for kernel build
-export KBUILD_BUILD_USER=nobody
-export KBUILD_BUILD_HOST=android_build
-export USE_CCACHE=1
-export PATH="$CLANGDIR/bin:$PATH"
-
-# Clean up previous build
-rm -f "$LOG_FILE"
-rm -rf "$OUT_DIR"
-mkdir -p "$OUT_DIR"
-
-# Generate defconfig
-make O="$OUT_DIR" ARCH=arm64 "$CONFIG_NAME"
-
-# Compile the kernel
-make -j"$(nproc --all)" \
-    O="$OUT_DIR" \
-    ARCH=arm64 \
-    CC=clang \
-    LD=ld.lld \
-    AR=llvm-ar \
-    AS=llvm-as \
-    NM=llvm-nm \
-    OBJCOPY=llvm-objcopy \
-    OBJDUMP=llvm-objdump \
-    STRIP=llvm-strip \
-    CROSS_COMPILE=aarch64-linux-gnu- \
-    CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee -a "$LOG_FILE"
-
-# Store build result
-BUILD_RESULT=${PIPESTATUS[0]}
-
-# If compilation fails, notify and exit
-if [ "$BUILD_RESULT" -ne 0 ]; then
-    send_telegram_message "❌ Compilation failed!"
-    [ -f "$LOG_FILE" ] && send_telegram_file "$LOG_FILE"
-    exit 1
+echo "Nuke previous toolchains"
+rm -rf toolchain out AnyKernel
+echo "cleaned up"
+echo "Cloning toolchain"
+      mkdir -p "gcc-64"
+      curl -Lo gcc-15.2.0.tar.gz "https://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-15.2.0/gcc-15.2.0.tar.gz"
+      tar -zxf gcc-15.2.0.tar.gz -C "gcc-64" --strip-components=1
+        KBUILD_COMPILER_STRING="GCC-15"
+        PATH="${pwd}/gcc-64/bin:${PATH}"
+echo "Done"
+if [ "$is_test" = true ]; then
+     echo "Its alpha test build"
+     unset chat_id
+     unset token
+     export chat_id=${my_id}
+     export token=${nToken}
+else
+     echo "Its beta release build"
 fi
+SHA=$(echo $DRONE_COMMIT_SHA | cut -c 1-8)
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DATE=$(date +'%H%M-%d%m%y')
+START=$(date +"%s")
+CODENAME=mido
+DEF=mido_defconfig
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export PATH="$(pwd)/gcc-64/bin:$PATH"
+export ARCH=arm64
+export KBUILD_BUILD_USER=malkist
+export KBUILD_BUILD_HOST=android
+# Push kernel to channel
+function push() {
+    cd AnyKernel || exit 1
+    ZIP=$(echo *.zip)
+    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung J6+</b>"
+}
+# Compile plox
+function compile() {
+     make -C $(pwd) O=out ${DEF}
+     make -j64 -C $(pwd) O=out
 
-#=============================#
-#      PATCH KPM IF ENABLED   #
-#=============================#
-
-# Patch kpm only if CONFIG_KPM=y
-if grep -q "^CONFIG_KPM=y" "$OUT_DIR/.config"; then
-    cd "$KERNEL_IMAGE_DIR"
-
-    # Download patch_linux from latest release
-    PATCH_URL="https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
-    if ! curl -L -o patch_linux "$PATCH_URL"; then
-        send_telegram_message "❌ Failed to download patch_linux"
-        exit 1
-    fi
-
-    # Make patch executable and run
-    chmod +x patch_linux
-    if ! ./patch_linux; then
-        send_telegram_message "❌ Failed to apply patch"
-        exit 1
-    fi
-
-    # Replace Image with patched oImage
-    if [ -f "oImage" ]; then
-        rm -f Image Image.gz-dtb
-        mv oImage Image
-    else
-        send_telegram_message "❌ Patching failed - oImage not found"
-        exit 1
-    fi
-
-    # Compress and append DTBs
-    gzip -c Image > Image.gz
-    cat Image.gz dts/*/*.dtb > Image.gz-dtb
-
-    # Back to working directory
-    cd "$KERNEL_DIR"
-fi
-
-#=============================#
-#     CREATE FLASHABLE ZIP    #
-#=============================#
-
-# If kernel image exists, package it
-if [ -a "$KERNEL_IMAGE" ]; then
+     if ! [ -a "$IMAGE" ]; then
         finderr
         exit 1
      fi
-
-    # Clone AnyKernel3 if it doesn't exist
-    if [ ! -d "$ANYKERNEL_DIR" ]; then
-        git clone "$ANYKERNEL_REPO" "$ANYKERNEL_DIR"
-    fi
-
-    # Ensure correct branch
-    cd "$ANYKERNEL_DIR"
-    git fetch origin
-    git checkout "$ANYKERNEL_BRANCH"
-   
-    # Copy compiled kernel image to AnyKernel
-    cp "$KERNEL_IMAGE" "$ANYKERNEL_DIR/Image.gz-dtb"
-
-    # Create flashable zip
-    
-    ZIP_NAME="${KERNEL_FLASH_NAME}-$(date +%Y%m%d)-${KERNEL_COMMIT_ID}.zip"
-    zip -r9 "../$ZIP_NAME" ./* > /dev/null
-    cd "$KERNEL_DIR"
-
-    # Send zip and log file to telegram
-    send_telegram_file "$ZIP_NAME"
-    send_telegram_file "$LOG_FILE"
-    send_telegram_message "✅ Compilation completed, Flashable zip is ready."
-
-# If kernel image doesn't exists, notify and exit
-else
-    send_telegram_message "❌ Build succeeded, but kernel image not found!"
-    send_telegram_file "$LOG_FILE"
-fi
+    git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+}
+# Zipping
+zipping() {
+    cd AnyKernel || exit 1
+    zip -r9 Teletubies-"${CODENAME}"-"${DATE}".zip ./*
+    cd ..
+}
+compile
+zipping
+END=$(date +"%s")
+DIFF=$(($END - $START))
+push
