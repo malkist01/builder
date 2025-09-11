@@ -17,9 +17,13 @@ cd "$KERNEL_DIR"
 curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 # Path to clang
-CLANGDIR="clang"
 
-git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 "$CLANGDIR"
+CLANGDIR="clang"
+mkdir -p "$CLANGDIR"
+      curl -Lo WeebX-Clang-20.0.0git.tar.gz "https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz"
+      tar -zxf WeebX-Clang-20.0.0git.tar.gz -C "$CLANGDIR" --strip-components=1
+        KBUILD_COMPILER_STRING="WeebX-Clang"
+        PATH="${PWD}/"$CLANGDIR"/bin:${PATH}"
 
 # Set output directory for the build
 OUT_DIR="$KERNEL_DIR/out"
@@ -33,6 +37,8 @@ KERNEL_IMAGE="$KERNEL_IMAGE_DIR/Image.gz-dtb"
 
 # Codename device
 CODENAME="mido"
+
+export TZ=Asia/Jakarta
 
 # Defconfig file for building
 CONFIG_NAME="mido_defconfig"
