@@ -208,8 +208,7 @@ if [ -f "$KERNEL_IMAGE" ]; then
     cd "$ANYKERNEL_DIR"
     git fetch origin
     git checkout "$ANYKERNEL_BRANCH"
-    cd "$KERNEL_DIR"
-
+   
     # Copy compiled kernel image to AnyKernel
     cp "$KERNEL_IMAGE" "$ANYKERNEL_DIR/Image.gz-dtb"
 
