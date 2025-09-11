@@ -45,7 +45,7 @@ CONFIG_NAME="mido_defconfig"
 
 # AnyKernel3 repository and branch
 ANYKERNEL_REPO="https://github.com/malkist01/anykernel3"
-ANYKERNEL_BRANCH=master
+ANYKERNEL_BRANCH="master"
 ANYKERNEL_DIR="$KERNEL_DIR/AnyKernel3"
 
 # Kernel flashable file name
