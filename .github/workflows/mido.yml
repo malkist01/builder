@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/Teletubies-mid.git'
+          default: 'https://github.com/malkist01/tesmid.git'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: 'SukiSU'
+          default: 'line-22.2'
           required: true
       token:
           description: 'Telegram bot token'
