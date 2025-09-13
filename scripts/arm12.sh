@@ -8,7 +8,6 @@ rm -rf KernelSU
 chmod +x patch.sh apply_cocci.sh
 
 ./patch.sh
-./apply_cocci.sh
 
 # Add KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
