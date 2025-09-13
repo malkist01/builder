@@ -13,10 +13,10 @@ curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh
 
 #add susfs
 echo "adding susfs"
-cp ../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch ./KernelSU/
-cp ../susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
-cp ../susfs4ksu/kernel_patches/fs/* ./fs/
-cp ../susfs4ksu/kernel_patches/include/linux/* ./include/linux/
+susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch ./KernelSU/
+susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
+susfs4ksu/kernel_patches/fs/* ./fs/
+susfs4ksu/kernel_patches/include/linux/* ./include/linux/
 cd ./KernelSU
 patch -p1 -F 3 < 10_enable_susfs_for_ksu.patch
 cd ..
