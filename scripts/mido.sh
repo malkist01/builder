@@ -37,12 +37,11 @@ echo "CONFIG_KSU_SUSFS_OPEN_REDIRECT=y" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_KSU_SUSFS_SUS_SU=y" >> ./arch/arm64/configs/mido_defconfig
 
 clang() {
+    rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-      mkdir -p "clang"
-      curl -Lo clang-r547379.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz"
-      tar -zxf clang-r547379.tar.gz -C "clang" --strip-components=1
-        KBUILD_COMPILER_STRING="Aosp-Clang"
+        git clone https://gitlab.com/LeCmnGend/clang -b clang-19 --depth=1 clang
+        KBUILD_COMPILER_STRING="LeCmnGend clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
     sudo apt install -y ccache
