@@ -6,8 +6,26 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-# integrate kernelsu-SukiSu
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.14
+
+# Get the kernel
+echo "Get the kernel..."
+cd ./android_kernel_samsung_exynos9820
+rm -rf ./KernelSU
+
+# Add KernelSU
+curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
+
+#add susfs
+echo "adding susfs"
+cp ../susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch ./KernelSU/
+cp ../susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
+cp ../susfs4ksu/kernel_patches/fs/* ./fs/
+cp ../susfs4ksu/kernel_patches/include/linux/* ./include/linux/
+cd ./KernelSU
+patch -p1 -F 3 < 10_enable_susfs_for_ksu.patch
+cd ..
+patch -p1 -F 3 < 50_add_susfs_in_kernel-4.9.patch
 
 clang() {
     echo "Cloning clang"
