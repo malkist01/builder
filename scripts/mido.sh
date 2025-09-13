@@ -6,7 +6,12 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-git clone https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9
+git clone https://github.com/dabao1955/kernel_build_action.git
+cd kernel_build_action/kernelsu
+
+chmod +x patch.sh apply_cocci.sh
+./patch.sh
+./apply_cocci.sh
 
 # Add KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
