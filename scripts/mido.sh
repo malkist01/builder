@@ -6,26 +6,13 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-git clone https://github.com/dabao1955/kernel_build_action.git
-cd kernel_build_action/kernelsu
-
 chmod +x patch.sh apply_cocci.sh
+
 ./patch.sh
 ./apply_cocci.sh
 
 # Add KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
-
-#add susfs
-echo "adding susfs"
-susfs4ksu/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch ./KernelSU/
-susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
-susfs4ksu/kernel_patches/fs/* ./fs/
-susfs4ksu/kernel_patches/include/linux/* ./include/linux/
-cd ./KernelSU
-patch -p1 -F 3 < 10_enable_susfs_for_ksu.patch
-cd ..
-patch -p1 -F 3 < 50_add_susfs_in_kernel-4.9.patch
 
 #add KSU Config
 echo "Adding CONFIG_KSU.."
