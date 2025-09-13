@@ -2,6 +2,21 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+cd kernel
+rm -rf KernelSU
+
+chmod +x patch.sh apply_cocci.sh
+
+./patch.sh
+./apply_cocci.sh
+
+# Add KernelSU
+curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
+
+#add KSU Config
+echo "Adding CONFIG_KSU.."
+echo "CONFIG_KSU=y" >> ./arch/arm/configs/j6primelte_defconfig
+echo "CONFIG_KSU_SUSFS=y" >> ./arch/arm/configs/j6primelte_defconfig
 # integrate kernelsu-SukiSu
 curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
 echo "Nuke previous toolchains"
