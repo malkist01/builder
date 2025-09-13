@@ -6,10 +6,9 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-chmod +x patch.sh apply_cocci.sh
+chmod +x patch.sh
 
 ./patch.sh
-./apply_cocci.sh
 
 # Add KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
