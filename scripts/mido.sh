@@ -6,11 +6,11 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-chmod +x test.patch
-patch -p1 < test.patch
+chmod +x add_susfs.patch && susfs_ksu.patch
+patch -p1 < add_susfs.patch && susfs_ksu.patch
 
 # Add KernelSU
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
+curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next-susfs
 
 #add KSU Config
 echo "Adding CONFIG_KSU.."
