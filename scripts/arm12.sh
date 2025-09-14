@@ -2,6 +2,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
+chmod +x test.patch
+patch -p1 < test.patch
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
