@@ -6,12 +6,11 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 rm -rf KernelSU
 
-chmod +x patch.sh
-
-./patch.sh
+chmod +x test.patch
+patch -p1 < test.patch
 
 # Add KernelSU
-curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 
 #add KSU Config
 echo "Adding CONFIG_KSU.."
