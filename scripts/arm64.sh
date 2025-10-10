@@ -22,6 +22,7 @@ IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j6primelte
+VER=KSU
 DEF=j6primelte_defconfig
 export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
@@ -53,7 +54,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-"${CODENAME}"-Arm64-KSU-Test"${DATE}".zip ./*
+    zip -r9 Teletubies-"${CODENAME}"-${VER}-"${DATE}".zip ./*
     cd ..
 }
 compile
