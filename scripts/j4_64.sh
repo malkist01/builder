@@ -55,7 +55,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-"${CODENAME}"-${VER}-"${DATE}".zip ./*
+    zip -r9 Teletubies-"${CODENAME}"-${VER}-"${ARCH}"-"${DATE}".zip ./*
     cd ..
 }
 compile
