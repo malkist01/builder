@@ -21,6 +21,7 @@ IMAGE=$(pwd)/out/arch/arm/boot/zImage
 DATE=$(date +'%H%M-%d%m%y')
 START=$(date +"%s")
 CODENAME=j4primelte
+VER=KSU
 DEF=j4primelte_defconfig
 export CROSS_COMPILE="$(pwd)/gcc32/bin/arm-linux-androideabi-"
 export PATH="$(pwd)/gcc32/bin:$PATH"
@@ -51,7 +52,7 @@ function compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-j4primelte-"${CODENAME}"-arm-"${DATE}".zip ./*
+    zip -r9 Teletubies-"${VER}"-"${CODENAME}"-"${ARCH}"-"${DATE}".zip ./*
     cd ..
 }
 compile
