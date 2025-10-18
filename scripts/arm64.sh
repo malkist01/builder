@@ -11,7 +11,7 @@ patch() {
 }
 export -f patch
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
-
+patch -p1 --fuzz=3 < patch
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
