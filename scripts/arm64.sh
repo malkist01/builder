@@ -2,16 +2,6 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-patch() {
-#   Replace the path with your patch binary path | find path by running "which patch" in terminal.
-#   $ which patch
-#   /usr/bin/patch
-
-    /usr/bin/patch "$@"
-}
-export -f patch
-curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
-
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
