@@ -7,6 +7,7 @@ rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
 git clone --depth=1 https://github.com/malkist01/malkist-toolchain -b master gcc-64
+git clone --depth=1 https://github.com/KudProject/arm-linux-androideabi-4.9.git -b master gcc32
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -25,7 +26,7 @@ CODENAME=santoni-3.18
 VER=KSU
 DEF=santoni_treble_defconfig
 export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
-export CROSS_COMPILE_ARM32="$(pwd)/gcc-64/bin/arm-linux-androideabi-"
+export CROSS_COMPILE_ARM32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
