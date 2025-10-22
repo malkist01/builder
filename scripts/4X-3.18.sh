@@ -3,25 +3,6 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-
-git clone --depth=1 https://github.com/malkist01/patch
-curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
-
-# Add SukiSU-Ultra
-curl -LSs "https://raw.githubusercontent.com/WildKernels/Wild_KSU/wild/kernel/setup.sh" | bash -s wild
-
-#add KSU Config
-echo "CONFIG_KPROBES=y" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_LOCAL_VERSION=-Teletubies 🕊️" >> ./arch/arm64/configs/santoni_defconfig
-echo "# CONFIG_LOCAL_VERSION_AUTO is not set" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_LINUX_COMPILE_BY=malkist" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_LINUX_COMPILE_HOST=hp jadul" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_CC_STACKPROTECTOR_STRONG=n" >> ./arch/arm64/configs/santoni_defconfig
-echo "Adding CONFIG_KSU.."
-echo "CONFIG_OVERLAY_FS=y" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_KSU=y" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_KSU_SUSFS=y" >> ./arch/arm64/configs/santoni_defconfig
-echo "CONFIG_KSU_TRACEPOINT_HOOK=y" >> ./arch/arm64/configs/santoni_defconfig
 clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
@@ -63,7 +44,7 @@ DEVICE="Xiaomi Redmi 4X"
 export DEVICE
 CODENAME="santoni"
 export CODENAME
-DEFCONFIG="santoni_defconfig"
+DEFCONFIG="santoni_treble_defconfig"
 export DEFCONFIG
 COMMIT_HASH=$(git rev-parse --short HEAD)
 export COMMIT_HASH
