@@ -4,8 +4,6 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
 clang() {
-clang() {
-    rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
         git clone https://github.com/kdrag0n/proton-clang.git -b master --depth=1 clang
