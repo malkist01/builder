@@ -4,12 +4,12 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
 clang() {
+clang() {
+    rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-      mkdir -p "clang"
-      curl -Lo WeebX-Clang-20.0.0git.tar.gz "https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz"
-      tar -zxf WeebX-Clang-20.0.0git.tar.gz -C "clang" --strip-components=1
-        KBUILD_COMPILER_STRING="WeebX-Clang"
+        git clone https://github.com/kdrag0n/proton-clang.git -b master --depth=1 clang
+        KBUILD_COMPILER_STRING="proton clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
     sudo apt install -y ccache
@@ -120,13 +120,6 @@ compile() {
          CXX="clang++" \
          HOSTCC="clang" \
          HOSTCXX="clang++" \
-         AR=llvm-ar \
-         AS=llvm-as \
-         NM=llvm-nm \
-         OBJCOPY=llvm-objcopy \
-         OBJDUMP=llvm-objdump \
-         STRIP=llvm-strip \
-         LLVM=1 \
         CROSS_COMPILE=aarch64-linux-gnu- \
         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
