@@ -6,7 +6,7 @@ cd kernel
 clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://github.com/kdrag0n/proton-clang.git -b master --depth=1 clang
+        git clone https://github.com/zhantech/clang-11.0.3.git -b 10.0 --depth=1 clang
         KBUILD_COMPILER_STRING="proton clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
