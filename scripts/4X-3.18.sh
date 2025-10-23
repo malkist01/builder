@@ -3,10 +3,10 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-git clone -j32 https://github.com/najahiiii/DragonTC.git -b 9.0 clang
+git clone -j32 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git -b lineage-19.1 gcc32
 git clone -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
 echo "Done"
-CT="$(pwd)/clang/bin/clang"
+GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
 GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
