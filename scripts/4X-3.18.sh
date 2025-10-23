@@ -105,9 +105,8 @@ compile() {
         rm -rf out && mkdir -p out
     fi
 
-    make O=out ARCH="${ARCH}" "${DEFCONFIG}"
-    make -s -C $(pwd) O=out ${DEFCONFIG}
-        make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
+        make -s -C $(pwd) O=out ${DEFCONFIG}
+        make -s -C $(pwd) CROSS_COMPILE=${GCC} O=out
 
     if ! [ -a "$IMAGE" ]; then
         finderr
