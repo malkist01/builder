@@ -3,17 +3,11 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-clang() {
-    echo "Cloning clang"
-    if [ ! -d "clang" ]; then
-        git clone https://github.com/zhantech/clang-11.0.3.git -b 10.0 --depth=1 clang
-        KBUILD_COMPILER_STRING="proton clang"
-        PATH="${PWD}/clang/bin:${PATH}"
-    fi
-    sudo apt install -y ccache
-    echo "Done"
-}
-
+git clone -j32 https://github.com/najahiiii/DragonTC.git -b 9.0 clang
+git clone -j32 https://github.com/najahiiii/aarch64-linux-gnu.git -b gcc9-20190401 gcc
+echo "Done"
+CT="$(pwd)/clang/bin/clang"
+GCC="$(pwd)/gcc/bin/aarch64-linux-gnu-"
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
@@ -112,14 +106,8 @@ compile() {
     fi
 
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
-    make -j"${PROCS}" O=out \
-         ARCH=$ARCH \
-         CC="clang" \
-         CXX="clang++" \
-         HOSTCC="clang" \
-         HOSTCXX="clang++" \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+    make -s -C $(pwd) O=out ${DEFCONFIG}
+        make -s -C $(pwd) CC=${CT} CROSS_COMPILE=${GCC} O=out -j32 -l32 2>&1| tee build.log
 
     if ! [ -a "$IMAGE" ]; then
         finderr
