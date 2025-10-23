@@ -106,7 +106,7 @@ compile() {
     fi
 
         make -s -C $(pwd) O=out ${DEFCONFIG}
-        make -s -C $(pwd) CROSS_COMPILE=${GCC} O=out
+        make -s -C $(pwd) CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} O=out
 
     if ! [ -a "$IMAGE" ]; then
         finderr
