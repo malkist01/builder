@@ -8,7 +8,7 @@ echo "cleaned up"
 echo "Cloning toolchain"
 git clone --depth=1 https://github.com/theradcolor/aarch64-linux-gnu -b stable-gcc gcc-64
 echo "Done"
-if [ "$is_test" = true ]; then
+if [ "$this_test" = true ]; then
      echo "Its alpha test build"
      unset chat_id
      unset token
@@ -24,7 +24,7 @@ START=$(date +"%s")
 CODENAME=j6primelte
 VER=KSU
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
