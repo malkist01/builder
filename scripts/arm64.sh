@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/malkist01/malkist-toolchain -b master gcc-64
+git clone --depth=1 https://github.com/deepongi/uber_aarch64-linux-android-4.9.x.git -b master gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
@@ -24,7 +24,7 @@ START=$(date +"%s")
 CODENAME=j6primelte
 VER=KSU
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
