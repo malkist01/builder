@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/deepongi/uber_aarch64-linux-android-4.9.x.git -b master gcc-64
+git clone --depth=1 https://github.com/theradcolor/aarch64-linux-gnu -b stable-gcc gcc-64
 echo "Done"
 if [ "$is_test" = true ]; then
      echo "Its alpha test build"
