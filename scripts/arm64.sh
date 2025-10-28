@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://bitbucket.org/matthewdalex/aarch64-linux-android-4.9.git gcc-64
+git clone --depth=1 https://github.com/marulamsamosir/toolchain-ubertc-4.9.git -b master gcc-64
 echo "Done"
 if [ "$this_test" = true ]; then
      echo "Its alpha test build"
