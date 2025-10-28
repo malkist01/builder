@@ -6,7 +6,7 @@ echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
 echo "Cloning toolchain"
-git clone --depth=1 https://github.com/theradcolor/aarch64-linux-gnu -b stable-gcc gcc-64
+git clone --depth=1 https://bitbucket.org/matthewdalex/aarch64-linux-android-8.x.git gcc-64
 echo "Done"
 if [ "$this_test" = true ]; then
      echo "Its alpha test build"
@@ -24,7 +24,7 @@ START=$(date +"%s")
 CODENAME=j6primelte
 VER=KSU
 DEF=j6primelte_defconfig
-export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-gnu-"
+export CROSS_COMPILE="$(pwd)/gcc-64/bin/aarch64-linux-android-"
 export PATH="$(pwd)/gcc-64/bin:$PATH"
 export ARCH=arm64
 export KBUILD_BUILD_USER=malkist
