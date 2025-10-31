@@ -10,7 +10,7 @@ clang() {
     rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://gitlab.com/LeCmnGend/proton-clang -b clang-15 --depth=1 clang
+        git clone https://github.com/KAGA-KOKO/clang-6.0.2.git -b clang --depth=1 clang
         KBUILD_COMPILER_STRING="Proton clang 15.0"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
