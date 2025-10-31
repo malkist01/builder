@@ -1,55 +1,94 @@
-name: CPH2083
+name: Kernel Compiler with Clang
 
 on:
+  push:
   workflow_dispatch:
     inputs:
-      device:
-          description: 'Device'
-          default: 'CPH2083'
-          required: true
-      repo:
-          description: 'Kernel source'
-          default: 'https://github.com/malkist01/OP12K'
-          required: true
-      branch:
-          description: 'Kernel source branch'
-          default: 'koko-oss'
-          required: true
-      token:
-          description: 'Telegram bot token'
-          default: '7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8'
-          required: true
-      chat_id:
-          description: 'Telegram chat id'
-          default: '-1002287610863'
-          required: true
-
+      KERNEL_SOURCE:
+        description: 'KERNEL_SOURCE (if want to use SSH keys, use git@github.com:XXXXX)'
+        required: true
+        default: 'https://github.com/aepranata/kernel_xiaomi_rosy'
+      KERNEL_BRANCH:
+        description: 'KERNEL_BRANCH'
+        required: true
+        default: '13'
+      CLANG_TOOLCHAIN:
+        description: 'CLANG_TOOLCHAIN'
+        required: true
+        default: 'https://gitlab.com/aepranata/atiga-clang.git'
+      CLANG_TOOLCHAIN_BRANCH:
+        description: 'CLANG_TOOLCHAIN_BRANCH'
+        required: true
+        default: '13.x'
+      DEFCONFIG_FILENAME:
+        description: 'DEFCONFIG_FILENAME'
+        required: true
+        default: 'rosy-perf_defconfig'
+      KERNEL_FILENAME:
+        description: 'KERNEL_FILENAME'
+        required: true
+        default: 'Image.gz-dtb'
 
 env:
-  TZ: Asia/Jakarta
-  DEVICE: ${{ github.event.inputs.device }}
-  REPO: ${{ github.event.inputs.repo }}
-  BRANCH: ${{ github.event.inputs.branch }}
-  token: ${{ github.event.inputs.token }}
-  chat_id: ${{ github.event.inputs.chat_id }}
+  GITHUB_EMAIL: ${{ secrets.EMAIL }}
+  GITHUB_USER: ${{ secrets.USER }}
+  BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
 jobs:
-  kernel-build:
-    runs-on: ubuntu-22.04
+  compile-kernel:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Initializing environment
-        run: |
-          git config --global user.name "malkist01"
-          git config --global user.email "aripujiyanto0812@gmail.com"
-          git clone https://github.com/akhilnarang/scripts x
-          cd x/setup && bash android_build_env.sh
-
-      - name: Compiling
-        run: |
-          if [ "${DEVICE}" = "CPH2083" ]; then
-            wget https://raw.githubusercontent.com/malkist01/builder/main/scripts/A12OP.sh
-            bash A12OP.sh
-          else
-            echo "Device not supported yet"
-          fi
+    - uses: actions/checkout@v4
+    - name: Cleanup
+      uses: rokibhasansagar/slimhub_actions@main
+    - name: Display Run Parameters
+      run: |
+        echo "::group::User Environment Variables"
+        echo "Kernel Source: ${{ github.event.inputs.KERNEL_SOURCE }}"
+        echo "Kernel Branch: ${{ github.event.inputs.KERNEL_BRANCH }}"
+        echo "GCC arm: ${{ github.event.inputs.GCC_ARM }}"
+        echo "GCC arm Branch: ${{ github.event.inputs.GCC_ARM_BRANCH }}"
+        echo "GCC arm64: ${{ github.event.inputs.GCC_ARM64 }}"
+        echo "GCC arm64 Branch: ${{ github.event.inputs.GCC_ARM64_BRANCH }}"
+        echo "Clang: ${{ github.event.inputs.CLANG_TOOLCHAIN }}"
+        echo "Clang Branch: ${{ github.event.inputs.CLANG_TOOLCHAIN_BRANCH }}"
+        echo "Defconfig Filename: ${{ github.event.inputs.DEFCONFIG_FILENAME }}"
+        echo "Kernel Filename: ${{ github.event.inputs.KERNEL_FILENAME }}"
+        echo "::endgroup::"
+    - name: Setup
+      run: |
+        sudo dnf groupinstall "Development tools" -y
+        sudo dnf install bc mpfr-devel gmp-devel libmpc-devel zlib-devel glibc-devel.i686 glibc-devel binutils-devel g++ texinfo bison flex cmake which ninja-build clang lld bzip2 binutils-arm-linux-gnu binutils-aarch64-linux-gnu -y
+    - name: Clone Kernel Source
+      run: |
+        mkdir workspace
+        cd workspace
+        git config --global user.name "${GITHUB_USER}"
+        git config --global user.email "${GITHUB_EMAIL}"
+        git clone ${{ github.event.inputs.KERNEL_SOURCE }} -b ${{ github.event.inputs.KERNEL_BRANCH }} --depth=1 --recursive kernel
+    - name: Clone Clang
+      if: |
+        github.event.inputs.CLANG_TOOLCHAIN != null
+        && github.event.inputs.CLANG_TOOLCHAIN_BRANCH != null
+      run: |
+        git clone ${{ github.event.inputs.CLANG_TOOLCHAIN }} -b ${{ github.event.inputs.CLANG_TOOLCHAIN_BRANCH }} --depth=1 my-clang
+      working-directory: workspace
+    - name: Build and push
+      run: |
+        export w_dir=$PWD
+        export PATH="$w_dir/my-clang/bin:$w_dir/gcc-arm64/bin:$w_dir/gcc-arm/bin:$PATH"
+        export k_file=$w_dir/kernel/out/arch/arm64/boot/${{ github.event.inputs.KERNEL_FILENAME }}
+        cd kernel
+        rm -rf out
+        make O=out arch=arm64 -j$(nproc --all) CC=clang CXX=clang++ CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip ${{ github.event.inputs.DEFCONFIG_FILENAME }}
+        make O=out arch=arm64 -j$(nproc --all) CC=clang CXX=clang++ CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
+        if [ -f $k_file ]; then
+          curl -F document=@"$k_file" "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument?chat_id=${CHAT_ID}"
+        fi
+      working-directory: workspace
