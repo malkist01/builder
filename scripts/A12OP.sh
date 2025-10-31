@@ -6,12 +6,14 @@ cd kernel
 
 git clone --depth=1 https://github.com/malkist01/patch
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 clang() {
-    rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://github.com/KAGA-KOKO/clang-6.0.2.git -b clang --depth=1 clang
-        KBUILD_COMPILER_STRING="Proton clang 15.0"
+      mkdir -p "clang"
+      curl -Lo clang-4691093.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/android-9.0.0_r48/clang-4691093.tar.gz"
+      tar -zxf clang-4691093.tar.gz -C "clang" --strip-components=1
+        KBUILD_COMPILER_STRING="Clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
     sudo apt install -y ccache
