@@ -3,6 +3,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
+git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b master-kernel-build-2021 gcc64
+git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b master-kernel-build-2021 gcc32
 clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
@@ -10,7 +12,7 @@ clang() {
       curl -Lo clang-4691093.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/android-9.0.0_r48/clang-4691093.tar.gz"
       tar -zxf clang-4691093.tar.gz -C "clang" --strip-components=1
         KBUILD_COMPILER_STRING="Clang"
-        PATH="${PWD}/clang/bin:${PATH}"
+        PATH="${PWD}/clang/bin:${PWD}/gcc64/bin:${PWD}/gcc32/bin:${PATH}"
     fi
     sudo apt install -y ccache
     echo "Done"
@@ -116,7 +118,10 @@ compile() {
     make O=out ARCH="${ARCH}" "${DEFCONFIG}"
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
+         DTC="dtc" \
+         HOSTCC="clang" \
          CC="clang" \
+        CLANG_TRIPLE=aarch64-linux-gnu- \
         CROSS_COMPILE=aarch64-linux-gnu- \
         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
