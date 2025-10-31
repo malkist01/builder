@@ -3,10 +3,6 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-
-git clone --depth=1 https://github.com/malkist01/patch
-curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
@@ -121,7 +117,6 @@ compile() {
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
          CC="clang" \
-         LLVM=1 \
         CROSS_COMPILE=aarch64-linux-gnu- \
         CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
