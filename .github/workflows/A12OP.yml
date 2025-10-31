@@ -9,11 +9,11 @@ on:
           required: true
       repo:
           description: 'Kernel source'
-          default: 'https://github.com/malkist01/A12OP.git'
+          default: 'https://github.com/malkist01/OP12K'
           required: true
       branch:
           description: 'Kernel source branch'
-          default: 'android-9.0'
+          default: 'koko-oss'
           required: true
       token:
           description: 'Telegram bot token'
