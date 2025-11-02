@@ -3,7 +3,19 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/fs/patch.sh" | bash -s main
-rm -rf KernelSU
+curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s v1.1.1
+         cd KernelSU-Next
+         wget https://raw.githubusercontent.com/ThRE-Team/KSU/refs/heads/next-susfs/0001-add-susfs-v1.5.5.patch
+         patch -p1 < 0001-add-susfs-v1.5.5.patch
+         cd ..
+         
+         git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu.git -b kernel-4.9 susfs4ksu
+         cp susfs4ksu/kernel_patches/fs/* ./fs
+         cp susfs4ksu/kernel_patches/include/linux/* ./include/linux
+         cp susfs4ksu/kernel_patches/50_add_susfs_in_kernel-4.9.patch ./
+         patch -p1 < 50_add_susfs_in_kernel-4.9.patch
+
+         make mrproper
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
