@@ -5,23 +5,41 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
 
-clang() {
-    rm -rf clang
-    echo "Cloning clang"
-    if [ ! -d "clang" ]; then
-    	mkdir clang
-     	cd clang
-        wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz
-	tar -xvf *
-        KBUILD_COMPILER_STRING="Another Clang"
-        PATH="${PWD}/clang/bin:${PATH}"
-    fi
-    sudo apt install -y ccache
-    echo "Done"
-}
-
+SECONDS=0 # builtin bash timer
 AnyKernel="https://github.com/romiyusnandar/Anykernel3.git"
 AnyKernelbranch="sweet"
+
+TC_DIR="$HOME/tc/prelude-clang"
+GCC_64_DIR="$HOME/tc/aarch64-linux-android-4.9"
+GCC_32_DIR="$HOME/tc/arm-linux-androideabi-4.9"
+AK3_DIR="AnyKernel3"
+DEFCONFIG="ginkgo_defconfig"
+export PATH="$TC_DIR/bin:$PATH"
+
+# Check for essentials
+if ! [ -d "${TC_DIR}" ]; then
+echo "Clang not found! Cloning to ${TC_DIR}..."
+if ! git clone --depth=1 https://gitlab.com/jjpprrrr/prelude-clang.git -b master ${TC_DIR}; then
+echo "Cloning failed! Aborting..."
+exit 1
+fi
+fi
+
+if ! [ -d "${GCC_64_DIR}" ]; then
+echo "gcc not found! Cloning to ${GCC_64_DIR}..."
+if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
+echo "Cloning failed! Aborting..."
+exit 1
+fi
+fi
+
+if ! [ -d "${GCC_32_DIR}" ]; then
+echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
+if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${GCC_32_DIR}; then
+echo "Cloning failed! Aborting..."
+exit 1
+fi
+fi
 
 export IMG="$PWD"/out/arch/arm64/boot/Image.gz
 export dtbo="$PWD"/out/arch/arm64/boot/dtbo.img
@@ -127,25 +145,26 @@ compile() {
     if [ -d "out" ]; then
         rm -rf out && mkdir -p out
     fi
+    
+if [[ $1 = "-r" || $1 = "--regen" ]]; then
+make O=out ARCH=arm64 $DEFCONFIG_DEVICE savedefconfig
+cp out/defconfig arch/arm64/configs/$DEFCONFIG_DEVICE
+exit
+fi
 
-    make O=out ARCH="${ARCH}"
-    make "$DEFCONFIG_DEVICE" O=out
-    make -j$(nproc) \
-    		O=out \
-    		ARCH=arm64 \
-    		LLVM=1 \
-    		LLVM_IAS=1 \
-    		CROSS_COMPILE=aarch64-linux-gnu- \
-    		CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee error.log
+mkdir -p out
+make O=out ARCH=arm64 $DEFCONFIG_DEVICE
 
-    if [ -f "$IMG" ]; then
+echo -e "\nStarting compilation...\n"
+make -j$(nproc --all) O=out ARCH=arm64 CC=clang LD=ld.lld AR=llvm-ar AS=llvm-as NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-linux-androideabi- CLANG_TRIPLE=aarch64-linux-gnu- Image.gz-dtb dtbo.img
+
+    if [ -f "$IMG" "$dtbo"]; then
                 echo -e "$green << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >> \n $white"
 		echo -e "$green << cloning AnyKernel from your repo >> \n $white"
                 git clone --depth=1 "$AnyKernel" --single-branch -b "$AnyKernelbranch" zip
                 echo -e "$yellow << making kernel zip >> \n $white"
                 cp -r "$IMG" zip/
                 cp -r "$dtbo" zip/
-                cp -r "$dtb" zip/
                 cd zip
                 export ZIP="test"-"kernel"-"$CODENAME"
                 zip -r9 "$ZIP" * -x .git README.md LICENSE *placeholder
@@ -180,7 +199,6 @@ zipping() {
     cd ..
 }
 
-clang
 sendinfo
 compile
 zipping
