@@ -1,6 +1,9 @@
 #!/bin/sh
 
 # Kernel Build Script by Mahiroo aka Yudaa
+rm -rf kernel
+git clone $REPO -b $BRANCH kernel
+cd kernel
 
 trap 'echo -e "\n\033[91m[!] Build dibatalkan oleh user.\033[0m"; tg_channelcast "⚠️ <b>Build kernel dibatalkan oleh user!</b>"; cleanup_files; exit 1' INT
 exec > >(tee -a build.log) 2>&1
@@ -41,17 +44,6 @@ cyan="\033[96m"
 green="\033[92m"
 red="\033[91m"
 reset="\033[0m"
-
-function install_dependencies() {
-    echo -e "${cyan}==> Instalasi dependensi...${reset}"
-    sudo apt update
-    sudo apt install -y bc cpio flex bison aptitude git python-is-python3 tar aria2 perl wget curl lz4 libssl-dev device-tree-compiler
-    sudo apt install -y zstd
-}
-
-rm -rf kernel
-git clone $REPO -b $BRANCH kernel
-cd kernel
 
 function clang() {
 if [ -d $COMPILERDIR ] ; then
@@ -222,7 +214,6 @@ function upload_defconfig() {
 # Eksekusi utama
 # ============================
 BUILD_START=$(date +"%s")
-install_dependencies
 clean
 clang
 send_initial_message
