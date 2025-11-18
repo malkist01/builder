@@ -42,6 +42,9 @@ jobs:
         run: |
           git config --global user.name "malkist01"
           git config --global user.email "aripujiyanto0812@gmail.com"
+          sudo apt update
+          sudo apt install -y bc cpio flex bison aptitude git python-is-python3 tar aria2 perl wget curl lz4 libssl-dev device-tree-compiler
+          sudo apt install -y zstd
 
       - name: Compiling
         run: |
