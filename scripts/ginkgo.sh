@@ -7,8 +7,15 @@ clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
       mkdir -p "clang"
-      curl -Lo WeebX-Clang-20.0.0git.tar.gz "https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz"
-      tar -zxf WeebX-Clang-20.0.0git.tar.gz -C "clang" --strip-components=1
+      wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/4d2864f08ff2c290563fb903a5156e0504620bbe/clang-r563880c.tar.gz -O clang.tar.gz
+      if [ $? -ne 0 ]; then
+          echo "Download failed! Aborting..."
+          exit 1
+      fi
+        echo "Extracting clang to ${CLANG_DIR}..."
+      tar -xf clang.tar.gz -C "${CLANG_DIR}"
+    rm -f clang.tar.gz
+  fi
         KBUILD_COMPILER_STRING="WeebX-Clang"
         PATH="${PWD}/clang/bin:${PATH}"
     fi
