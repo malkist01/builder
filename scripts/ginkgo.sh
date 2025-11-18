@@ -3,27 +3,43 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
+
+LOCAL_DIR="$(pwd)/.."
+TC_DIR="${LOCAL_DIR}/toolchain"
+CLANG_DIR="${TC_DIR}/clang"
+ARCH_DIR="${TC_DIR}/aarch64-linux-android-4.9"
+ARM_DIR="${TC_DIR}/arm-linux-androideabi-4.9"
+
 clang() {
     echo "Cloning clang"
-    if [ ! -d "clang" ]; then
-      mkdir -p "clang"
-      wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/4d2864f08ff2c290563fb903a5156e0504620bbe/clang-r563880c.tar.gz -O clang.tar.gz
-      if [ $? -ne 0 ]; then
-          echo "Download failed! Aborting..."
-          exit 1
-      fi
-        echo "Extracting clang to ${CLANG_DIR}..."
-      tar -xf clang.tar.gz -C "${CLANG_DIR}"
-    rm -f clang.tar.gz
-  fi
-        KBUILD_COMPILER_STRING="WeebX-Clang"
-        PATH="${PWD}/clang/bin:${PATH}"
+    if [ ! -d "${CLANG_DIR}" ]; then
+      mkdir -p "${CLANG_DIR}"
+      curl -Lo clang-r563880c.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/4d2864f08ff2c290563fb903a5156e0504620bbe/clang-r563880c.tar.gz"
+      tar -zxf clang-r563880c.tar.gz -C "clang" --strip-components=1
+        KBUILD_COMPILER_STRING="Clang"
     fi
     sudo apt install -y ccache
     echo "Done"
 }
 
+  if ! [ -d "${ARCH_DIR}" ]; then
+      echo "gcc not found! Cloning to ${ARCH_DIR}..."
+      if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${ARCH_DIR}; then
+          echo "Cloning failed! Aborting..."
+          exit 1
+      fi
+  fi
+
+  if ! [ -d "${ARM_DIR}" ]; then
+      echo "gcc_32 not found! Cloning to ${ARM_DIR}..."
+      if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${ARM_DIR}; then
+          echo "Cloning failed! Aborting..."
+          exit 1
+      fi
+  fi
+  
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTBO=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DATE=$(date +"%Y%m%d-%H%M")
 START=$(date +"%s")
 KERNEL_DIR=$(pwd)
@@ -124,20 +140,20 @@ compile() {
     make -j"${PROCS}" O=out \
          ARCH=$ARCH \
          CC="clang" \
-         CXX="clang++" \
-         HOSTCC="clang" \
-         HOSTCXX="clang++" \
-         AR=llvm-ar \
-         AS=llvm-as \
-         NM=llvm-nm \
-         OBJCOPY=llvm-objcopy \
-         OBJDUMP=llvm-objdump \
-         STRIP=llvm-strip \
-         LLVM=1 \
-        CROSS_COMPILE=aarch64-linux-gnu- \
-        CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+         LD="ld.lld" \
+         AR="llvm-ar" \
+         AS="llvm-as" \
+         NM="llvm-nm" \
+         OBJCOPY="llvm-objcopy" \
+         OBJDUMP="llvm-objdump" \
+         STRIP="llvm-strip" \
+         CLANG_TRIPLE="aarch64-linux-gnu-" \
+         CROSS_COMPILE="$ARCH_DIR/bin/aarch64-linux-android-" \
+         CROSS_COMPILE_ARM32="$ARM_DIR/bin/arm-linux-androideabi-" \
+       Image.gz-dtb \
+       dtbo.img \
 
-    if ! [ -a "$IMAGE" ]; then
+    if ! [ -a "$IMAGE" "$DTBO" ]; then
         finderr
         exit 1
     fi
