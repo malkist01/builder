@@ -1,136 +1,229 @@
-#!/usr/bin/env bash
-git clone $REPO -b $BRANCH kernel_dir
-SECONDS=0 # builtin bash timer
-kernel_dir="${PWD}"
-objdir="${kernel_dir}/out"
-builddir="${kernel_dir}/build"
-CCACHE=$(command -v ccache)
-LOCAL_DIR="$(pwd)/.."
-TC_DIR="${LOCAL_DIR}/toolchain"
-CLANG_DIR="${TC_DIR}/clang"
-ARCH_DIR="${TC_DIR}/aarch64-linux-android-4.9"
-ARM_DIR="${TC_DIR}/arm-linux-androideabi-4.9"
-export DEFCONFIG="ginkgo_defconfig"
-export ARCH="arm64"
-export PATH="$CLANG_DIR/bin:$ARCH_DIR/bin:$ARM_DIR/bin:$PATH"
-export LD_LIBRARY_PATH="$CLANG_DIR/lib:$LD_LIBRARY_PATH"
-export KBUILD_BUILD_VERSION="1"
+#!/bin/sh
 
-setup() {
-  if ! [ -d "${CLANG_DIR}" ]; then
-      echo "Clang not found! Downloading Google prebuilt..."
-      mkdir -p "${CLANG_DIR}"
-      wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/4d2864f08ff2c290563fb903a5156e0504620bbe/clang-r563880c.tar.gz -O clang.tar.gz
-      if [ $? -ne 0 ]; then
-          echo "Download failed! Aborting..."
-          exit 1
-      fi
-        echo "Extracting clang to ${CLANG_DIR}..."
-      tar -xf clang.tar.gz -C "${CLANG_DIR}"
-    rm -f clang.tar.gz
-  fi
+# Kernel Build Script by Mahiroo aka Yudaa
 
-  if ! [ -d "${ARCH_DIR}" ]; then
-      echo "gcc not found! Cloning to ${ARCH_DIR}..."
-      if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${ARCH_DIR}; then
-          echo "Cloning failed! Aborting..."
-          exit 1
-      fi
-  fi
+trap 'echo -e "\n\033[91m[!] Build dibatalkan oleh user.\033[0m"; tg_channelcast "⚠️ <b>Build kernel dibatalkan oleh user!</b>"; cleanup_files; exit 1' INT
+exec > >(tee -a build.log) 2>&1
 
-  if ! [ -d "${ARM_DIR}" ]; then
-      echo "gcc_32 not found! Cloning to ${ARM_DIR}..."
-      if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${ARM_DIR}; then
-          echo "Cloning failed! Aborting..."
-          exit 1
-      fi
-  fi
+# ============================
+# Setup
+# ============================
+PHONE="ginkgo"
+DEFCONFIG="ginkgo_defconfig"
+CLANG="Neutron Clang 19"
+ZIPNAME="Erika-$(date '+%Y%m%d-%H%M').zip"
+BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
+CHAT_ID="-1002287610863"
+COMPILERDIR="$(pwd)/../zyc-clang"
+export KBUILD_BUILD_USER="Mahiroo"
+export KBUILD_BUILD_HOST="HiraTeam"
 
-  if [[ $1 = "-k" || $1 = "--ksu" ]]; then
-      echo -e "\nCleanup KernelSU first on local build\n"
-      rm -rf KernelSU drivers/kernelsu
+# ============================
+# Variabel Telegram dan Device Info
+# ============================
+DEVICE="Redmi Note 8"
+DISTRO="$(lsb_release -d | awk -F'\t' '{print $2}')"
+PARSE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+COMMIT_POINT="$(git rev-parse HEAD)"
+CPU_NAME="$(lscpu | grep 'Model name' | awk -F': ' '{print $2}')"
+PROCS="$(nproc --all)"
+TOTAL_RAM_GB="$(free -g | awk '/^Mem:/{print $2}')"
+DATE="$(date '+%Y-%m-%d %H:%M:%S')"
+MESSAGE_ERROR="Error Build untuk $PHONE Dibatalkan!"
+kernel="out/arch/arm64/boot/Image.gz"
+dtb="out/arch/arm64/boot/dtb.img"
+dtbo="out/arch/arm64/boot/dtbo.img"
 
-      echo -e "\nKSU Support, let's Make it On\n"
-      curl -kLSs "https://raw.githubusercontent.com/KazuyaProject/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
+# ============================
+# Warna output
+# ============================
+cyan="\033[96m"
+green="\033[92m"
+red="\033[91m"
+reset="\033[0m"
 
-      sed -i 's/CONFIG_KSU=n/CONFIG_KSU=y/g' arch/arm64/configs/ginkgo_defconfig
-  else
-      echo -e "\nKSU not Support, let's Skip\n"
-  fi
+function install_dependencies() {
+    echo -e "${cyan}==> Instalasi dependensi...${reset}"
+    sudo apt update
+    sudo apt install -y bc cpio flex bison aptitude git python-is-python3 tar aria2 perl wget curl lz4 libssl-dev device-tree-compiler
+    sudo apt install -y zstd
 }
 
-clean_build() {
-  echo -e "\nStarting build clean-up..."
+rm -rf kernel
+git clone $REPO -b $BRANCH kernel
+cd kernel
 
-  if [ -d "${objdir}" ]; then
-      echo "Clean up old build output..."
-      rm -rf "${objdir}" || { echo "Failed to clean up old build output!"; exit 1; }
-  else
-      echo "No previous build output found."
-  fi
-
-  if [ -f "${kernel_dir}/.config" ]; then
-      echo "Clean up kernel configuration files..."
-      make mrproper -C "${kernel_dir}" || { echo "make mrproper failed!"; exit 1; }
-  else
-      echo "No existing .config file found, skipping make mrproper."
-  fi
-
-  echo -e "Build clean-up completed"
+function clang() {
+if [ -d $COMPILERDIR ] ; then
+echo -e " "
+echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
+else
+echo -e " "
+echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
+sleep 2
+echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
+sleep 2
+wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz"
+    rm -rf $COMPILERDIR 
+    mkdir $COMPILERDIR 
+    tar -xvf zyc-clang.tar.gz -C $COMPILERDIR
+    rm -rf zyc-clang.tar.gz
+sleep 1
+echo
+echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
+sleep 1
+fi
 }
 
-make_defconfig() {
-  echo -e "\nGenerating Defconfig"
-  mkdir -p "${objdir}"
-  if ! make -s ARCH="${ARCH}" O="${objdir}" "${DEFCONFIG}" -j$(nproc --all); then
-      echo -e "Failed to generate defconfig"
-      exit 1
-  fi
-  echo -e "Defconfig generation completed"
+function verify_toolchain_versions() {
+    echo -e "${green}🔧 Clang  : $(${CLANG_DIR}/bin/clang --version | head -n 1)${reset}"
 }
 
-compile() {
-cd "${kernel_dir}" || { echo "Kernel directory not found!"; exit 1; }
-echo -e "\nStarting compilation..."
-make -j$(nproc --all) \
-       O="${objdir}" \
-       ARCH="arm64" \
-       CC="clang" \
-       LD="ld.lld" \
-       AR="llvm-ar" \
-       AS="llvm-as" \
-       NM="llvm-nm" \
-       OBJCOPY="llvm-objcopy" \
-       OBJDUMP="llvm-objdump" \
-       STRIP="llvm-strip" \
-       CLANG_TRIPLE="aarch64-linux-gnu-" \
-       CROSS_COMPILE="$ARCH_DIR/bin/aarch64-linux-android-" \
-       CROSS_COMPILE_ARM32="$ARM_DIR/bin/arm-linux-androideabi-" \
-       Image.gz-dtb \
-       dtbo.img \
-       CC="${CCACHE} clang" \
-       ${1:-}
-    if [ $? -ne 0 ]; then
-       echo -e "Compilation failed!"
-      exit 1
-   fi
+function tg_channelcast() {
+    local msg=""
+    for POST in "$@"; do
+        msg+="${POST}"$'\n'
+    done
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+        -d chat_id="${CHAT_ID}" \
+        -d disable_web_page_preview=true \
+        -d parse_mode=HTML \
+        -d text="${msg}"
 }
 
-completion() {
-  local image="${objdir}/arch/arm64/boot/Image.gz-dtb"
-  local dtbo="${objdir}/arch/arm64/boot/dtbo.img"
-
-  if [[ -f "${image}" && -f "${dtbo}" ]]; then
-      echo -e "\nOkThisIsEpic!"
-      echo -e "Build time: $(($SECONDS / 60)) min $(($SECONDS % 60)) sec"
-  else
-      echo -e "\nThis Is Not Epic :'("
-      exit 1
-  fi
+function send_initial_message() {
+    tg_channelcast \
+        "🚀 <b>Kernel Build Dimulai!</b>" \
+        "📱 <b>Device :</b> <code>$DEVICE</code>" \
+        "🛠️ <b>Compiler :</b> <code>$CLANG</code>" \
+        "🌿 <b>Branch :</b> <code>$PARSE_BRANCH</code>" \
+        "📝 <b>Commit :</b> $COMMIT_POINT" \
+        "🧠 <b>CPU :</b> <code>$CPU_NAME ($PROCS cores)</code>" \
+        "💾 <b>RAM :</b> <code>$TOTAL_RAM_GB GB</code>" \
+        "📅 <b>Date :</b> <code>$DATE</code>" \
+        "⌛️ Build berjalan..."
 }
 
-setup "$@"
-clean_build
-make_defconfig
-compile
-completion
+function send_success_message() {
+    tg_channelcast \
+        "✅ <b>Build Sukses!</b>" \
+        "📱 <b>Device :</b> <code>$DEVICE</code>" \
+        "📦 <b>ZIP:</b> <code>$ZIPNAME</code>" \
+        "🕒 <b>Durasi:</b> <code>$((DIFF / 60)) menit $((DIFF % 60)) detik</code>"
+}
+
+function send_log() {
+    curl -s -F "chat_id=${CHAT_ID}" -F "document=@log.txt" -F "caption=${MESSAGE_ERROR}" "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" > /dev/null
+}
+
+function clean() {
+    echo -e "${red}[!] Clean...${reset}"
+    rm -rf log.txt full-build.log out/full_defconfig "$ZIPNAME"
+}
+
+function clean_out_dir() {
+    echo -e "${red}[!] Bersihkan out/...${reset}"
+    [ -d out ] && rm -rf out/* || mkdir out
+}
+
+function cleanup_files() {
+    echo -e "${red}[!] Cleanup akhir...${reset}"
+    [ -f "$ZIPNAME" ] && rm -f "$ZIPNAME"
+    [ -f log.txt ] && rm -f log.txt
+    [ -f full-build.log ] && rm -f full-build.log
+    [ -f out/full_defconfig ] && rm -f out/full_defconfig
+}
+
+function build_kernel() {
+    export PATH="$COMPILERDIR/bin:$PATH"
+    make -j$(nproc --all) O=out ARCH=arm64 ${DEFCONFIG}
+    if [ $? -ne 0 ]
+then
+    echo -e "\n"
+    echo -e "$red [!] BUILD FAILED \033[0m"
+    echo -e "\n"
+else
+    echo -e "\n"
+    echo -e "$green==================================\033[0m"
+    echo -e "$green= [!] START BUILD ${DEFCONFIG}\033[0m"
+    echo -e "$green==================================\033[0m"
+    echo -e "\n"
+fi
+
+# Speed up build process
+MAKE="./makeparallel"
+
+# Build Start Here
+
+   make -j$(nproc --all) \
+    O=out \
+    ARCH=arm64 \
+    LLVM=1 \
+    LLVM_IAS=1 \
+    AR=llvm-ar \
+    NM=llvm-nm \
+    LD=ld.lld \
+    OBJCOPY=llvm-objcopy \
+    OBJDUMP=llvm-objdump \
+    STRIP=llvm-strip \
+    CC=clang \
+    DTC_EXT=dtc \
+    CROSS_COMPILE=aarch64-linux-gnu- \
+    CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee full-build.log
+
+    grep -Ei "(error|warning)" full-build.log > log.txt
+
+    if grep -q "error:" full-build.log || [ ! -f out/arch/arm64/boot/Image ]; then
+        echo -e "${red}[!] Build gagal${reset}"
+        send_log
+        cleanup_files
+        return 1
+    fi
+
+    echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
+
+    [ ! -d AnyKernel3 ] && git clone -q https://github.com/rinnsakaguchi/AnyKernel3.git -b FSociety
+    cp -f "$kernel" "$dtb" AnyKernel3/
+    [ -f "$dtbo" ] && cp -f "$dtbo" AnyKernel3/
+    cd AnyKernel3 || return 1
+    zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
+    cd .. && rm -rf AnyKernel3
+
+    make O=out ARCH=arm64 savedefconfig
+    mv out/defconfig out/full_defconfig
+
+    BUILD_END=$(date +"%s")
+    DIFF=$((BUILD_END - BUILD_START))
+
+    echo -e "${green}🕒 Durasi Build : $((DIFF / 60)) menit $((DIFF % 60)) detik${reset}"
+    upload_zip
+    upload_fullbuild_log
+    upload_defconfig
+    send_success_message
+    cleanup_files
+}
+
+function upload_zip() {
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"$ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
+}
+
+function upload_fullbuild_log() {
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"full-build.log" -F caption="Full Build Log - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
+}
+
+function upload_defconfig() {
+    [ -f out/full_defconfig ] || return
+    cp out/full_defconfig ginkgo_defconfig
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"surya_defconfig" -F caption="Full Defconfig - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
+    rm -f ginkgo_defconfig
+}
+
+# ============================
+# Eksekusi utama
+# ============================
+BUILD_START=$(date +"%s")
+install_dependencies
+clean
+clang
+send_initial_message
+build_kernel
