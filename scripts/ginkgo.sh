@@ -13,7 +13,7 @@ exec > >(tee -a build.log) 2>&1
 # Setup
 # ============================
 PHONE="Ginkgo"
-DEFCONFIG="ginkgo_defconfig"
+DEFCONFIG="vendor/ginkgo-perf_defconfig"
 CLANG="Neutron Clang 19"
 ZIPNAME="Erika-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
@@ -213,9 +213,9 @@ function upload_fullbuild_log() {
 
 function upload_defconfig() {
     [ -f out/full_defconfig ] || return
-    cp out/full_defconfig ginkgo_defconfig
-    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"ginkgo_defconfig" -F caption="Full Defconfig - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
-    rm -f ginkgo_defconfig
+    cp out/full_defconfig vendor/ginkgo-perf_defconfig
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"vendor/ginkgo-perf_defconfig" -F caption="Full Defconfig - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
+    rm -f vendor/ginkgo-perf_defconfig
 }
 
 # ============================
