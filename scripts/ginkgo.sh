@@ -167,7 +167,6 @@ MAKE="./makeparallel"
     OBJDUMP=llvm-objdump \
     STRIP=llvm-strip \
     CC=clang \
-    DTC_EXT=dtc \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee full-build.log
 
