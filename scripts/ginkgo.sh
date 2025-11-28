@@ -49,35 +49,30 @@ green="\033[92m"
 red="\033[91m"
 reset="\033[0m"
 
-function install_dependencies() {
-    echo -e "${cyan}==> Instalasi dependensi...${reset}"
-    sudo apt update
-    sudo apt install -y bc cpio flex bison aptitude git python-is-python3 tar aria2 perl wget curl lz4 libssl-dev device-tree-compiler
-    sudo apt install -y zstd
-}
-
-function clang() {
-if [ -d $COMPILERDIR ] ; then
-echo -e " "
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
 else
 echo -e " "
 echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
-sleep 2
-        git clone https://github.com/malkist01/clang-azure.git --depth=1 -b main $COMPILERDIR
 sleep 1
 echo
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
 sleep 1
 fi
-}
 
 # KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 
 # Check for essentials
+if ! [ -d "${TC_DIR}" ]; then
+echo "Clang not found! Cloning to ${TC_DIR}..."
+if ! git clone --depth=1 https://gitlab.com/jjpprrrr/prelude-clang.git -b master ${TC_DIR}; then
+echo "Cloning failed! Aborting..."
+exit 1
+fi
+fi
+
 if ! [ -d "${GCC_64_DIR}" ]; then
 echo "gcc not found! Cloning to ${GCC_64_DIR}..."
 if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
@@ -236,7 +231,6 @@ function upload_defconfig() {
 # Eksekusi utama
 # ============================
 BUILD_START=$(date +"%s")
-install_dependencies
 clean
 clang
 send_initial_message
