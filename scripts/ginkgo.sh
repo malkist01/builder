@@ -16,9 +16,15 @@ AK3_DIR="AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
 export PATH="$TC_DIR/bin:$PATH"
 
-# Build Environment
-sudo -E apt-get -qq update
-sudo -E apt-get -qq install bc python2 python3 python-is-python3
+function push() {
+    cd AnyKernel3 || exit 1
+    ZIP=$(echo *.zip)
+    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
+        -F chat_id="$chat_id" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung J6+</b>"
+}
 
 # KernelSU
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
@@ -71,5 +77,5 @@ git checkout master &> /dev/null
 zip -r9 "../$ZIPNAME" * -x '*.git*' README.md *placeholder
 cd ..
 echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
-
+push
 exit
