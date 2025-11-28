@@ -14,11 +14,11 @@ exec > >(tee -a build.log) 2>&1
 # ============================
 PHONE="Ginkgo"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
-CLANG="Neutron Clang 19"
+CLANG="Azzure Clang 15"
 ZIPNAME="Erika-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
 CHAT_ID="-1002287610863"
-COMPILERDIR="$(pwd)/../zyc-clang"
+COMPILERDIR="$(pwd)/../azzure-clang"
 export KBUILD_BUILD_USER="malkist"
 export KBUILD_BUILD_HOST="android"
 
@@ -63,11 +63,7 @@ echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
 sleep 2
-wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz"
-    rm -rf $COMPILERDIR 
-    mkdir $COMPILERDIR 
-    tar -xvf zyc-clang.tar.gz -C $COMPILERDIR
-    rm -rf zyc-clang.tar.gz
+        git clone https://github.com/malkist01/clang-azure.git --depth=1 -b main $COMPILERDIR
 sleep 1
 echo
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
