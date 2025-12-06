@@ -36,7 +36,7 @@ DEVICE="Redmi Note 8"
 export DEVICE
 CODENAME="ginkgo"
 export CODENAME
-DEFCONFIG="vendor/ginkgo-perf_defconfig"
+DEFCONFIG="ginkgo_defconfig"
 export DEFCONFIG
 KVERS="TinkyWinky"
 export KVERS
