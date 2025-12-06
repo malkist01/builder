@@ -3,7 +3,7 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-git clone https://github.com/malkist01/clang-azure.git --depth=1 -b main clang
+git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
 git clone -j32 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git -b lineage-19.1 gcc32
 git clone -j32 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git -b lineage-19.1 gcc
 echo "Done"
