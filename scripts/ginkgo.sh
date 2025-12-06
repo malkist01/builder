@@ -132,8 +132,8 @@ completion() {
       exit 1
   fi
 }
-
 setup "$@"
+chmod +x post.sh && bash post.sh
 clean_build
 make_defconfig
 compile
