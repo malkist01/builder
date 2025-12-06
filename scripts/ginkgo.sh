@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Dependencies
 rm -rf kernel
-git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
+mkdir -p -v $HOME/clang
+aria2c -o clang-r547379.tar.gz https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz
+tar -C $HOME/clang -zxf clang-r547379.tar.gz
 mkdir -p -v $HOME/gcc
 aria2c -o gcc-aarch64.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/0a0604336d4d1067aa1aaef8d3779b31fcee841d.tar.gz
 tar -C $HOME/gcc -zxf gcc-aarch64.tar.gz
