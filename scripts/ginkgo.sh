@@ -1,81 +1,128 @@
-#!/bin/bash
-#
-# Compile script for Cuh kernel
-# Copyright (C) 2020-2023 Adithya R.
-# Copyright (C) 2023 Tejas Singh.
+#!/usr/bin/env bash
+# Dependencies
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
+git clone https://github.com/malkist01/clang-azure.git --depth=1 -b main clang
+git clone -j32 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git -b lineage-19.1 gcc32
+git clone -j32 https://github.com/malkist01/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git -b lineage-19.1 gcc
+echo "Done"
+CLANG=$(pwd)/clang/bin/aarch64-linux-gnu-
+GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
+GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTB=$(pwd)/out/arch/arm64/boot/dtbo.img
+DATE=$(date +"%Y%m%d-%H%M")
+START=$(date +"%s")
+KERNEL_DIR=$(pwd)
+#Ccache
+export USE_CCACHE=1
+export TZ=Asia/Jakarta
+export KBUILD_COMPILER_STRING
+ARCH=arm64
+export ARCH
+CC=clang
+export CC
+KBUILD_BUILD_HOST="android"
+export KBUILD_BUILD_HOST
+KBUILD_BUILD_USER="malkist"
+export KBUILD_BUILD_USER
+DEVICE="Redmi Note 8"
+export DEVICE
+CODENAME="ginkgo"
+export CODENAME
+DEFCONFIG="vendor/ginkgo_defconfig"
+export DEFCONFIG
+COMMIT_HASH=$(git rev-parse --short HEAD)
+export COMMIT_HASH
+PROCS=$(nproc --all)
+export PROCS
+STATUS=STABLE
+export STATUS
+BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
+CHAT_ID="-1002287610863"
+source "${HOME}"/.bashrc && source "${HOME}"/.profile
+if [ $CACHE = 1 ]; then
+    ccache -M 100G
+    export USE_CCACHE=1
+fi
+LC_ALL=C
+export LC_ALL
 
-SECONDS=0 # builtin bash timer
-ZIPNAME="Cuh-ginkgo-v1.8-KSU-$(TZ=Asia/Kolkata date +"%Y%m%d-%H%M").zip"
-TC_DIR="$HOME/tc/prelude-clang"
-GCC_64_DIR="$HOME/tc/aarch64-linux-android-4.9"
-GCC_32_DIR="$HOME/tc/arm-linux-androideabi-4.9"
-AK3_DIR="AnyKernel3"
-DEFCONFIG="vendor/ginkgo-perf_defconfig"
-export PATH="$TC_DIR/bin:$PATH"
-
-function push() {
-    cd AnyKernel3 || exit 1
-    ZIP=$(echo *.zip)
-    curl -F document=@$ZIP "https://api.telegram.org/bot$token/sendDocument" \
-        -F chat_id="$chat_id" \
-        -F "disable_web_page_preview=true" \
-        -F "parse_mode=html" \
-        -F caption="Build took $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) second(s). | For <b>Samsung J6+</b>"
+tg() {
+    curl -sX POST https://api.telegram.org/bot"${BOT_TOKEN}"/sendMessage -d chat_id="${CHAT_ID}" -d parse_mode=Markdown -d disable_web_page_preview=true -d text="$1" &>/dev/null
 }
 
-# KernelSU
-curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+tgs() {
+    MD5=$(md5sum "$1" | cut -d' ' -f1)
+    curl -fsSL -X POST -F document=@"$1" https://api.telegram.org/bot"${BOT_TOKEN}"/sendDocument \
+        -F "chat_id=${CHAT_ID}" \
+        -F "parse_mode=Markdown" \
+        -F "caption=$2 | *MD5*: \`$MD5\`"
+}
 
-# Check for essentials
-if ! [ -d "${TC_DIR}" ]; then
-echo "Clang not found! Cloning to ${TC_DIR}..."
-if ! git clone --depth=1 https://gitlab.com/jjpprrrr/prelude-clang.git -b master ${TC_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
+# Send Build Info
+sendinfo() {
+    tg "
+• Compiler Action •
+*Building on*: \`Github actions\`
+*Date*: \`${DATE}\`
+*Device*: \`${DEVICE} (${CODENAME})\`
+*Branch*: \`$(git rev-parse --abbrev-ref HEAD)\`
+*Last Commit*: [${COMMIT_HASH}](${REPO}/commit/${COMMIT_HASH})
+*Compiler*: \`${KBUILD_COMPILER_STRING}\`
+*Build Status*: \`${STATUS}\`"
+}
 
-if ! [ -d "${GCC_64_DIR}" ]; then
-echo "gcc not found! Cloning to ${GCC_64_DIR}..."
-if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ${GCC_64_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
+# Push kernel to channel
+push() {
+    cd AnyKernel || exit 1
+    ZIP=$(echo *.zip)
+    tgs "${ZIP}" "Build took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s). | For *${DEVICE} (${CODENAME})* | ${KBUILD_COMPILER_STRING}"
+}
 
-if ! [ -d "${GCC_32_DIR}" ]; then
-echo "gcc_32 not found! Cloning to ${GCC_32_DIR}..."
-if ! git clone --depth=1 -b lineage-19.1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ${GCC_32_DIR}; then
-echo "Cloning failed! Aborting..."
-exit 1
-fi
-fi
+# Catch Error
+finderr() {
+    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+        -d chat_id="$CHAT_ID" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d sticker="CAADBQADZwADqZrmFoa87YicX2hwAg" \
+        -d text="Build throw an error(s)"
+    error_sticker
+    exit 1
+}
 
-if [[ $1 = "-r" || $1 = "--regen" ]]; then
-make O=out ARCH=arm64 $DEFCONFIG savedefconfig
-cp out/defconfig arch/arm64/configs/$DEFCONFIG
-exit
-fi
+# Compile
+compile() {
 
-mkdir -p out
-make O=out ARCH=arm64 $DEFCONFIG
+    if [ -d "out" ]; then
+        rm -rf out && mkdir -p out
+    fi
 
-echo -e "\nStarting compilation...\n"
-make -j$(nproc --all) O=out ARCH=arm64 CC=clang LD=ld.lld AR=llvm-ar AS=llvm-as NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-linux-android- CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-linux-androideabi- CLANG_TRIPLE=aarch64-linux-gnu- Image.gz-dtb dtbo.img
+        make -s -C $(pwd) O=out ${DEFCONFIG}
+        make -s -C $(pwd) TRIPLE_COMPILE=${CLANG} CROSS_COMPILE=${GCC} CROSS_COMPILE_ARM32=${GCC32} O=out
 
-if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && [ -f "out/arch/arm64/boot/dtbo.img" ]; then
-echo -e "\nKernel compiled succesfully! Zipping up...\n"
-fi
-cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
-cp out/arch/arm64/boot/dtbo.img AnyKernel3
-rm -f *zip
-cd AnyKernel3
-git checkout master &> /dev/null
-zip -r9 "../$ZIPNAME" * -x '*.git*' README.md *placeholder
-cd ..
-echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
+    if ! [ -a "$IMAGE" "$DTB" ]; then
+        finderr
+        exit 1
+    fi
+
+    git clone --depth=1 https://github.com/malkist01/anykernel3.git AnyKernel -b master
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+    cp out/arch/arm64/boot/dtbo.img AnyKernel
+}
+# Zipping
+zipping() {
+    cd AnyKernel || exit 1
+    zip -r9 Teletubies-"${BRANCH}"-"${CODENAME}"-"${DATE}".zip ./*
+    cd ..
+}
+
+clang
+sendinfo
+compile
+zipping
+END=$(date +"%s")
+DIFF=$((END - START))
 push
-exit
