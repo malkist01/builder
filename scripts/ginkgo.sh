@@ -4,22 +4,10 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-SECONDS=0 # builtin bash timer
-kernel_dir="${PWD}"
-objdir="${kernel_dir}/out"
-builddir="${kernel_dir}/build"
-CCACHE=$(command -v ccache)
-LOCAL_DIR="$(pwd)/.."
 TC_DIR="${LOCAL_DIR}/toolchain"
 CLANG_DIR="${TC_DIR}/clang"
 ARCH_DIR="${TC_DIR}/aarch64-linux-android-4.9"
 ARM_DIR="${TC_DIR}/arm-linux-androideabi-4.9"
-export DEFCONFIG="ginkgo_defconfig"
-export ARCH="arm64"
-export PATH="$CLANG_DIR/bin:$ARCH_DIR/bin:$ARM_DIR/bin:$PATH"
-export LD_LIBRARY_PATH="$CLANG_DIR/lib:$LD_LIBRARY_PATH"
-export KBUILD_BUILD_VERSION="1"
-
 setup() {
   if ! [ -d "${CLANG_DIR}" ]; then
       echo "Clang not found! Downloading Google prebuilt..."
@@ -62,42 +50,96 @@ setup() {
       echo -e "\nKSU not Support, let's Skip\n"
   fi
 }
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+DTB=$(pwd)/out/arch/arm64/boot/dtbo.img
+DATE=$(date +"%Y%m%d-%H%M")
+START=$(date +"%s")
+KERNEL_DIR=$(pwd)
+CACHE=1
+export CACHE
+export KBUILD_COMPILER_STRING
+ARCH=arm64
+export ARCH
+export DEFCONFIG="ginkgo_defconfig"
+export ARCH="arm64"
+export PATH="$CLANG_DIR/bin:$ARCH_DIR/bin:$ARM_DIR/bin:$PATH"
+export LD_LIBRARY_PATH="$CLANG_DIR/lib:$LD_LIBRARY_PATH"
+export KBUILD_BUILD_VERSION="1"
+DEVICE="Redmi Note 8"
+export DEVICE
+CODENAME="ginkgo"
+export CODENAME
+KVERS="TinkyWinky"
+export KVERS
+AVERS="(10)"
+export AVERS
+COMMIT_HASH=$(git log --oneline --pretty=tformat:"%h  %s  [%an]" --abbrev-commit --abbrev=1 -1)
+export COMMIT_HASH
+PROCS=$(nproc --all)
+export PROCS
+STATUS=STABLE
+export STATUS
+source "${HOME}"/.bashrc && source "${HOME}"/.profile
+if [ $CACHE = 1 ]; then
+    ccache -M 100G
+    export USE_CCACHE=1
+fi
+LC_ALL=C
+export LC_ALL
 
-clean_build() {
-  echo -e "\nStarting build clean-up..."
-
-  if [ -d "${objdir}" ]; then
-      echo "Clean up old build output..."
-      rm -rf "${objdir}" || { echo "Failed to clean up old build output!"; exit 1; }
-  else
-      echo "No previous build output found."
-  fi
-
-  if [ -f "${kernel_dir}/.config" ]; then
-      echo "Clean up kernel configuration files..."
-      make mrproper -C "${kernel_dir}" || { echo "make mrproper failed!"; exit 1; }
-  else
-      echo "No existing .config file found, skipping make mrproper."
-  fi
-
-  echo -e "Build clean-up completed"
+tg() {
+    curl -sX POST https://api.telegram.org/bot"${token}"/sendMessage -d chat_id="${chat_id}" -d parse_mode=Markdown -d disable_web_page_preview=true -d text="$1" &>/dev/null
 }
 
-make_defconfig() {
-  echo -e "\nGenerating Defconfig"
-  mkdir -p "${objdir}"
-  if ! make -s ARCH="${ARCH}" O="${objdir}" "${DEFCONFIG}" -j$(nproc --all); then
-      echo -e "Failed to generate defconfig"
-      exit 1
-  fi
-  echo -e "Defconfig generation completed"
+tgs() {
+    MD5=$(md5sum "$1" | cut -d' ' -f1)
+    curl -fsSL -X POST -F document=@"$1" https://api.telegram.org/bot"${token}"/sendDocument \
+        -F "chat_id=${chat_id}" \
+        -F "parse_mode=Markdown" \
+        -F "caption=$2 | *MD5*: \`$MD5\`"
 }
 
+# Send Build Info
+sendinfo() {
+    tg "
+• IMcompiler Action •
+*Building on*: \`Github actions\`
+*Date*: \`${DATE}\`
+*Device*: \`${DEVICE} (${CODENAME})\`
+*Branch*: \`$(git rev-parse --abbrev-ref HEAD)\`
+*Compiler*: \`${KBUILD_COMPILER_STRING}\`
+*Last Commit*: \`${COMMIT_HASH}\`
+*Build Status*: \`${STATUS}\`"
+}
+
+# Push kernel to channel
+push() {
+    cd AnyKernel || exit 1
+    ZIP=$(echo *.zip)
+    tgs "${ZIP}" "Build took $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s). | For *${DEVICE} (${CODENAME})* | ${KBUILD_COMPILER_STRING}"
+}
+
+# Catch Error
+finderr() {
+    curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+        -d chat_id="$chat_id" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d sticker="CAACAgIAAxkBAAED3JViAplqY4fom_JEexpe31DcwVZ4ogAC1BAAAiHvsEs7bOVKQsl_OiME" \
+        -d text="Build throw an error(s)"
+    error_sticker
+    exit 1
+}
+
+# Compile
 compile() {
-cd "${kernel_dir}" || { echo "Kernel directory not found!"; exit 1; }
-echo -e "\nStarting compilation..."
-make -j$(nproc --all) \
-       O="${objdir}" \
+
+    if [ -d "out" ]; then
+        rm -rf out && mkdir -p out
+    fi
+
+    make O=out ARCH="${ARCH}" "${DEFCONFIG}"
+    make -j"${PROCS}" O=out \
        ARCH="arm64" \
        CC="clang" \
        LD="ld.lld" \
@@ -113,28 +155,27 @@ make -j$(nproc --all) \
        Image.gz-dtb \
        dtbo.img \
        CC="${CCACHE} clang" \
-       ${1:-}
-    if [ $? -ne 0 ]; then
-       echo -e "Compilation failed!"
-      exit 1
-   fi
+
+    if ! [ -f "${IMAGE}" && -f "${DTBO}"]; then
+        finderr
+        exit 1
+    fi
+
+    git clone --depth=1 https://github.com/malkist01/AnyKernel3.git AnyKernel -b master
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
+    cp out/arch/arm64/boot/dtbo.img AnyKernel    
+}
+# Zipping
+zipping() {
+    cd AnyKernel || exit 1
+    zip -r9 Teletubies-"${KVERS}"-"${AVERS}"-"${CODENAME}"-"${DATE}".zip ./*
+    cd ..
 }
 
-completion() {
-  local image="${objdir}/arch/arm64/boot/Image.gz-dtb"
-  local dtbo="${objdir}/arch/arm64/boot/dtbo.img"
-
-  if [[ -f "${image}" && -f "${dtbo}" ]]; then
-      echo -e "\nOkThisIsEpic!"
-      echo -e "Build time: $(($SECONDS / 60)) min $(($SECONDS % 60)) sec"
-  else
-      echo -e "\nThis Is Not Epic :'("
-      exit 1
-  fi
-}
-setup "$@"
-chmod +x post.sh && bash post.sh
-clean_build
-make_defconfig
+setup
+sendinfo
 compile
-completion
+zipping
+END=$(date +"%s")
+DIFF=$((END - START))
+push
