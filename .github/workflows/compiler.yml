@@ -1,4 +1,4 @@
-# Ginkgo Compiler
+# Ginkgo Project
 name: Ginkgo Compiler
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
         type: string
       name:
         description: 'Name'
-        default: '4.4-kernel Ginkgo'
+        default: '4.9-kernel'
         required: true
         type: string
       compiler:
@@ -20,22 +20,27 @@ on:
         type: string
       aosp-clang:
         description: 'Clang | false for disable'
-        default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0998f421320ae02fddabec8a78b91bf7620159f6/clang-r563880.tar.gz'
+        default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz'
         required: true
         type: string
       kernel-url:
         description: 'Kernel-url'
-        default: 'https://github.com/malkist01/dipsy.git'
+        default: 'https://github.com/malkist01/Gay.git'
         required: true
         type: string
       kernel-branch:
         description: 'Kernel-branch'
-        default: 'main'
+        default: 'sixteen/main'
         required: true
         type: string
       kernel-config:
         description: 'Kernel-config'
-        default: 'vendor/ginkgo_defconfig'
+        default: 'ginkgo_defconfig'
+        required: true
+        type: string
+      kernelsu:
+        description: 'KernelSU | false for disable'
+        default: 'curl -kLSs "https://raw.githubusercontent.com/KazuyaProject/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs'
         required: true
         type: string
       disable-lto:
@@ -45,15 +50,13 @@ on:
         type: string
       AK3:
         description: 'AnyKernel3'
-        default: 'https://github.com/FlopKernel-Series/AnyKernel3-trinket.git'
+        default: 'https://github.com/osm0sis/AnyKernel3'
         required: true
         type: string
-        
 env:
   TZ: Asia/Jakarta
-  
 jobs:
-  compiler:
+  ginkgo:
     runs-on: ${{ inputs.ubuntu }}
     steps:
     - name: Checkin
@@ -78,7 +81,7 @@ jobs:
          echo "kernel-config: ${{ inputs.kernel-config }}"
          echo "kernelsu: ${{ inputs.kernelsu }}"
          echo "disable-lto: ${{ inputs.disable-lto }}"
-         echo "teletubies Project"
+         echo "linex Project"
     - name: Checkout
       uses: actions/checkout@v4
     - name: Setup Packages
@@ -146,6 +149,24 @@ jobs:
                   echo "CONFIG_LTO_NONE=y" | tee -a arch/arm64/configs/${{ inputs.kernel-config }} >/dev/null
              fi
          fi
+    - name: Setup KernelSU
+      run: |
+         if [ ${{ inputs.kernel-url }} != false ]; then
+            cd kernel-dir
+         fi
+         if [ ${{ inputs.kernel-url }} == false ]; then
+            if [ ${{ inputs.kernel-branch }} != main ]; then
+               ${{ inputs.kernel-branch }}
+            fi
+         fi
+         rm -rf KernelSU
+         if [ ${{ inputs.kernelsu }} == ksu ]; then
+            curl -kLSs "https://raw.githubusercontent.com/KazuyaProject/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
+         elif [ ${{ inputs.kernelsu }} == next ]; then
+            curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
+         elif [ ${{ inputs.kernelsu }} != false ]; then
+            ${{ inputs.kernelsu }}
+         fi
     - name: Compile
       run: |
          mkdir -p -v out
@@ -161,8 +182,8 @@ jobs:
          else
             export PATH=$HOME/clang/bin:$HOME/gcc-64/bin:$HOME/gcc-32/bin:$PATH
          fi
-         export KBUILD_BUILD_USER="linex"
-         export KBUILD_BUILD_HOST="project"
+         export KBUILD_BUILD_USER="malkist"
+         export KBUILD_BUILD_HOST="android"
          if [ ${{ inputs.compiler }} == gcc ]; then
             COMMAND+=" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-"
          elif [ ${{ inputs.compiler }} == clang ] && [ ${{ inputs.aosp-clang }} == false ]; then
