@@ -103,22 +103,24 @@ compile() {
     if [ -d "out" ]; then
         rm -rf out && mkdir -p out
     fi
-
-    CC=clang 
-    LLVM=1 
-    LLVM_IAS=0 
-    AR=llvm-ar 
-    NM=llvm-nm 
-    STRIP=llvm-strip 
-    OBJCOPY=llvm-objcopy 
-    OBJDUMP=llvm-objdump 
-    READELF=llvm-readelf 
-    HOSTCC=clang 
-    HOSTCXX=clang++ 
-    HOSTAR=llvm-ar
-    CROSS_COMPILE=aarch64-linux-android- 
+    make O=out ARCH="${ARCH}" "${DEFCONFIG}"
+    make -j"${PROCS}" O=out \
+    CC=clang \
+    LLVM=1 \
+    LLVM_IAS=0 \
+    AR=llvm-ar \
+    NM=llvm-nm \
+    STRIP=llvm-strip \
+    OBJCOPY=llvm-objcopy \
+    OBJDUMP=llvm-objdump \
+    READELF=llvm-readelf \
+    HOSTCC=clang \
+    HOSTCXX=clang++ \
+    HOSTAR=llvm-ar \
+    CLANG_TRIPLE=aarch64-linux-gnu- \
+    CROSS_COMPILE=aarch64-linux-android- \
     CROSS_COMPILE_ARM32=arm-linux-androideabi- 
-    CLANG_TRIPLE=aarch64-linux-gnu-
+    
     if ! [ -a "$IMAGE" "$DTB" ]; then
         finderr
         exit 1
