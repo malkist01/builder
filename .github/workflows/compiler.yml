@@ -5,7 +5,7 @@ on:
     inputs:
       ubuntu:
         description: 'Run on'
-        default: 'ubuntu-22.04'
+        default: 'latest'
         required: true
         type: string
       name:
@@ -25,23 +25,23 @@ on:
         type: string
       kernel-url:
         description: 'Kernel-url'
-        default: 'https://github.com/malkist01/Gay.git'
+        default: 'https://github.com/malkist01/dipsy.git'
         required: true
         type: string
       kernel-branch:
         description: 'Kernel-branch'
-        default: 'sixteen/main'
+        default: 'main'
         required: true
         type: string
       kernel-config:
         description: 'Kernel-config'
-        default: 'ginkgo_defconfig'
+        default: 'vendor/ginkgo_defconfig'
         required: true
         type: string
       kernelsu:
         description: 'KernelSU | false for disable'
         default: 'curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki'
-        required: true
+        required: false
         type: string
       disable-lto:
         description: 'Disable LTO'
