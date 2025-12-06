@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # Dependencies
 rm -rf kernel
+git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
+mkdir -p -v $HOME/gcc
+aria2c -o gcc-aarch64.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/0a0604336d4d1067aa1aaef8d3779b31fcee841d.tar.gz
+tar -C $HOME/gcc -zxf gcc-aarch64.tar.gz
+mkdir -p -v $HOME/gcc32
+aria2c -o gcc-arm.tar.gz https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/4d16d93f49c2b5ecdd0f12c38d194835dd595603.tar.gz
+tar -C $HOME/gcc32 -zxf gcc-arm.tar.gz
 git clone $REPO -b $BRANCH kernel
 cd kernel
-git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
-git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 gcc
-git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 gcc32
 echo "Done"
 CLANG="$(pwd)/clang/bin/aarch64-linux-gnu-"
 GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
