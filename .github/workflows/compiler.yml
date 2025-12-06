@@ -20,7 +20,7 @@ on:
         type: string
       aosp-clang:
         description: 'Clang | false for disable'
-        default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz'
+        default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-prebuilts/clang-r584948.tar.gz'
         required: true
         type: string
       kernel-url:
@@ -50,11 +50,15 @@ on:
         type: string
       AK3:
         description: 'AnyKernel3'
-        default: 'https://github.com/osm0sis/AnyKernel3'
+        default: 'https://github.com/FlopKernel-Series/AnyKernel3-trinket.git'
         required: true
         type: string
+        
+env:
+  TZ: Asia/Jakarta
+  
 jobs:
-  linext-24:
+  compiler:
     runs-on: ${{ inputs.ubuntu }}
     steps:
     - name: Checkin
@@ -79,7 +83,7 @@ jobs:
          echo "kernel-config: ${{ inputs.kernel-config }}"
          echo "kernelsu: ${{ inputs.kernelsu }}"
          echo "disable-lto: ${{ inputs.disable-lto }}"
-         echo "linex Project"
+         echo "teletubies Project"
     - name: Checkout
       uses: actions/checkout@v4
     - name: Setup Packages
@@ -159,7 +163,7 @@ jobs:
          fi
          rm -rf KernelSU
          if [ ${{ inputs.kernelsu }} == ksu ]; then
-            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.7.6
+            curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
          elif [ ${{ inputs.kernelsu }} == next ]; then
             curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
          elif [ ${{ inputs.kernelsu }} != false ]; then
