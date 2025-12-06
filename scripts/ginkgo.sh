@@ -7,11 +7,12 @@ cd kernel
 git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git gcc -b lineage-19.1
 git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git gcc32 -b lineage-19.1
 clang() {
-    rm -rf clang
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
-        git clone https://github.com/malkist01/clang-azure.git --depth=1 -b main clang
-        KBUILD_COMPILER_STRING="Azzure clang"
+      mkdir -p "clang"
+      curl -Lo WeebX-Clang-20.0.0git.tar.gz "https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz"
+      tar -zxf WeebX-Clang-20.0.0git.tar.gz -C "clang" --strip-components=1
+        KBUILD_COMPILER_STRING="WeebX-Clang"
     fi
     sudo apt install -y ccache
     echo "Done"
