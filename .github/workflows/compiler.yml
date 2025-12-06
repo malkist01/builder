@@ -5,7 +5,7 @@ on:
     inputs:
       ubuntu:
         description: 'Run on'
-        default: 'latest'
+        default: 'ubuntu-latest'
         required: true
         type: string
       name:
