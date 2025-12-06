@@ -11,9 +11,7 @@ tar -C $HOME/gcc32 -zxf gcc-arm.tar.gz
 git clone $REPO -b $BRANCH kernel
 cd kernel
 echo "Done"
-CLANG="$(pwd)/clang/bin/aarch64-linux-gnu-"
-GCC32="$(pwd)/gcc32/bin/arm-linux-androideabi-"
-GCC="$(pwd)/gcc/bin/aarch64-linux-android-"
+export PATH=$HOME/clang/bin:$HOME/gcc/bin:$HOME/gcc32/bin:$PATH
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DTB=$(pwd)/out/arch/arm64/boot/dtbo.img
 DATE=$(date +"%Y%m%d-%H%M")
