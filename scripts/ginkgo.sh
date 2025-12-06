@@ -4,7 +4,7 @@ rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
 git clone https://gitlab.com/clangsantoni/zyc_clang.git -b 21 --depth=1 clang
-git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b master-kernel-build-2021 gcc
+git clone --depth=1 git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b master-kernel-build-2021 gcc
 git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b master-kernel-build-2021 gcc32
 echo "Done"
 CLANG="$(pwd)/clang/bin/aarch64-linux-gnu-"
