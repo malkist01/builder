@@ -4,6 +4,7 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
+LOCAL_DIR="$(pwd)/.."
 TC_DIR="${LOCAL_DIR}/toolchain"
 CLANG_DIR="${TC_DIR}/clang"
 ARCH_DIR="${TC_DIR}/aarch64-linux-android-4.9"
