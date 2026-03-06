@@ -16,7 +16,7 @@ echo "CONFIG_LINUX_COMPILE_BY=malkist" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_LINUX_COMPILE_HOST=hp jadul" >> ./arch/arm64/configs/mido_defconfig
 echo "Adding CONFIG_KSU.."
 echo "CONFIG_KSU=y" >> ./arch/arm64/configs/mido_defconfig
-echo "CONFIG_KSUSFS=y" >> ./arch/arm64/configs/mido_defconfig
+echo "CONFIG_KSU_MANUAL_HOOK=y" >> ./arch/arm64/configs/mido_defconfig
 clang() {
     echo "Cloning clang"
     if [ ! -d "clang" ]; then
