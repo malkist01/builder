@@ -66,7 +66,7 @@ PROCS=$(nproc --all)
 export PROCS
 STATUS=STABLE
 export STATUS
-BOT_TOKEN="7596553794:AAGoeg4VypmUfBqfUML5VWt5mjivN5-3ah8"
+BOT_TOKEN="7868194496:AAGY7WwRRbeCOPYOnczoCPh2psC43Q0F3JI"
 CHAT_ID="-1002287610863"
 source "${HOME}"/.bashrc && source "${HOME}"/.profile
 if [ $CACHE = 1 ]; then
