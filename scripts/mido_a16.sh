@@ -3,11 +3,11 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel
 cd kernel
-git clone --depth=1 https://github.com/malkist01/patch
-curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/patch.sh" | bash -s main
+wget https://raw.githubusercontent.com/rksuorg/kernel_patches/refs/heads/master/manual_hook/kernel-4.4_4.9.patch
+patch -p1 < kernel-4.4_4.9.patch
 curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/legacy/kernel/setup.sh" | bash -s legacy
 make mrproper
-echo "# CONFIG_KPM is not set" >> ./arch/arm64/configs/mido_defconfig
+echo "CONFIG_KPROBES=n" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_KALLSYMS=y" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_KALLSYMS_ALL=y" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_LOCAL_VERSION=-Teletubies 🕊️" >> ./arch/arm64/configs/mido_defconfig
