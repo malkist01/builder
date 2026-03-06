@@ -5,7 +5,7 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 wget https://raw.githubusercontent.com/rksuorg/kernel_patches/refs/heads/master/manual_hook/kernel-4.4_4.9.patch
 patch -p1 < kernel-4.4_4.9.patch
-curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/legacy/kernel/setup.sh" | bash -s legacy
+curl -LSs https://raw.githubusercontent.com/ThRE-Team/KernelSU-Next/main/kernel/setup.sh | bash -s main
 make mrproper
 echo "CONFIG_KPROBES=n" >> ./arch/arm64/configs/mido_defconfig
 echo "CONFIG_KALLSYMS=y" >> ./arch/arm64/configs/mido_defconfig
@@ -155,7 +155,7 @@ compile() {
 # Zipping
 zipping() {
     cd AnyKernel || exit 1
-    zip -r9 Teletubies-"${BRANCH}"-"${CODENAME}"-"${DATE}".zip ./*
+    zip -r9 Teletubies-KSUN-"${BRANCH}"-"${CODENAME}"-"${DATE}".zip ./*
     cd ..
 }
 
