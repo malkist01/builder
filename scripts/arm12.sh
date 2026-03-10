@@ -4,6 +4,7 @@ git clone $REPO -b $BRANCH kernel
 cd kernel
 wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-3.18.patch
 patch -p1 < kernel-3.18.patch
+curl https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh | bash
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
