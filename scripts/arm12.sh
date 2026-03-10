@@ -5,6 +5,8 @@ cd kernel
 curl https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh | bash
 wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-3.18.patch
 patch -p1 < kernel-3.18.patch
+curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/backport.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/ksu.sh" | bash -s main
 echo "CONFIG_KSU=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_EXTRAS=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_LSM_SECURITY_HOOKS=y" >> ./arch/arm/configs/j6primelte_defconfig
