@@ -9,7 +9,7 @@ curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/backport.s
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/ksu.sh" | bash -s main
 echo "CONFIG_KSU=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_EXTRAS=y" >> ./arch/arm/configs/j6primelte_defconfig
-echo "CONFIG_KSU_LSM_SECURITY_HOOKS=y" >> ./arch/arm/configs/j6primelte_defconfig
+echo "CONFIG_KSU_LSM_SECURITY_HOOKS=n" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
