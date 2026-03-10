@@ -2,8 +2,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-4.4_4.9.patch
-patch -p1 < kernel-4.4_4.9.patch
+wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-3.18.patch
+patch -p1 < kernel-3.18.patch
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
