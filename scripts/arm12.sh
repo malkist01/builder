@@ -2,7 +2,8 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/fs/patch.sh" | bash -s main
+wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-4.4_4.9.patch
+patch -p1 < kernel-4.4_4.9.patch
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
 echo "cleaned up"
