@@ -2,14 +2,14 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-curl https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/refs/heads/main/kernel/setup.sh | bash -s 3.x-compatible
+curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-3.18.patch
 patch -p1 < kernel-3.18.patch
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/backport.sh" | bash -s main
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/ksu.sh" | bash -s main
 echo "CONFIG_KSU=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_EXTRAS=y" >> ./arch/arm/configs/j6primelte_defconfig
-echo "CONFIG_KSU_LSM_SECURITY_HOOKS=n" >> ./arch/arm/configs/j6primelte_defconfig
+echo "CONFIG_KPROBES=n" >> ./arch/arm/configs/j6primelte_defconfig
 echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> ./arch/arm/configs/j6primelte_defconfig
 echo "Nuke previous toolchains"
 rm -rf toolchain out AnyKernel
