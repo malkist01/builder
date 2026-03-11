@@ -2,7 +2,7 @@
 rm -rf kernel
 git clone $REPO -b $BRANCH kernel 
 cd kernel
-curl https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh | bash
+curl https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/refs/heads/main/kernel/setup.sh | bash -s 3.x-compatible
 wget https://raw.githubusercontent.com/malkist01/kernel_patches/refs/heads/master/manual_hook/kernel-3.18.patch
 patch -p1 < kernel-3.18.patch
 curl -LSs "https://raw.githubusercontent.com/malkist01/patch/main/add/backport.sh" | bash -s main
